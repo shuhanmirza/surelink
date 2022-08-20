@@ -47,8 +47,7 @@ func (server *Server) getMap(ctx *gin.Context) {
 		return
 	}
 
-	//TODO: go routine
-	setEntryInRedis(ctx, server, request.UUID, redirectionMap.Url)
+	go setEntryInRedis(ctx, server, request.UUID, redirectionMap.Url)
 
 	response = GetMapResponse{Url: redirectionMap.Url}
 	ctx.JSON(http.StatusOK, response)
@@ -69,7 +68,7 @@ func getEntryFromRedis(ctx *gin.Context, server *Server, uuid string) string {
 	}
 
 	// set default ttl again if used
-	server.redisStore.Client.Expire(ctx, redisKey, util.REDIS_REDIRECTION_TTL)
+	go server.redisStore.Client.Expire(ctx, redisKey, util.REDIS_REDIRECTION_TTL)
 
 	return redisValue
 }
