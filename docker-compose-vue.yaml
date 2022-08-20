@@ -10,8 +10,8 @@ services:
       VIRTUAL_PORT: 8080
       LETSENCRYPT_HOST: surel.ink
       LETSENCRYPT_EMAIL: shuhan.mirza@gmail.com
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
 networks:
   default:
     external:
