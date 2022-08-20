@@ -1,19 +1,21 @@
-package server
+package goserver
 
 import (
 	"github.com/gin-gonic/gin"
+	gedis "surelink-go/redisStore"
 	db "surelink-go/sqlc"
 )
 
 const PREFIX_PATH = "/redirection"
 
 type Server struct {
-	store  *db.Store
-	router *gin.Engine
+	store      *db.Store
+	router     *gin.Engine
+	redisStore *gedis.RedisStore
 }
 
-func NewServer(store *db.Store) *Server {
-	server := &Server{store: store}
+func NewServer(store *db.Store, redisStore *gedis.RedisStore) *Server {
+	server := &Server{store: store, redisStore: redisStore}
 	router := gin.Default()
 
 	router.GET(PREFIX_PATH+"/get-map", server.getMap)

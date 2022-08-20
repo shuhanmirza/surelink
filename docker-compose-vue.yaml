@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfiles/VueDockerFile
     restart: unless-stopped
+    container_name: vueserver-surelink
     environment:
       VIRTUAL_HOST: surel.ink
       VIRTUAL_PORT: 8080
