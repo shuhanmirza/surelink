@@ -10,7 +10,7 @@ import (
 )
 
 type GetMapRequest struct {
-	UUID string `json:"uuid" binding:"required"`
+	Uid string `json:"uid" binding:"required"`
 }
 
 type GetMapResponse struct {
@@ -29,7 +29,7 @@ func (server *Server) getMap(ctx *gin.Context) {
 		return
 	}
 
-	url := getEntryFromRedis(ctx, server, request.UUID)
+	url := getEntryFromRedis(ctx, server, request.Uid)
 	if len(url) != 0 {
 		response = GetMapResponse{Url: url}
 		ctx.JSON(http.StatusOK, response)
@@ -37,7 +37,7 @@ func (server *Server) getMap(ctx *gin.Context) {
 	}
 
 	// search in DB
-	redirectionMap, err := server.store.Queries.GetRedirectionMap(ctx, request.UUID)
+	redirectionMap, err := server.store.Queries.GetRedirectionMap(ctx, request.Uid)
 	if err != nil {
 		log.Println(err)
 		if pqErr, ok := err.(*pq.Error); ok {
@@ -47,7 +47,7 @@ func (server *Server) getMap(ctx *gin.Context) {
 		return
 	}
 
-	go setEntryInRedis(ctx, server, request.UUID, redirectionMap.Url)
+	go setEntryInRedis(ctx, server, request.Uid, redirectionMap.Url)
 
 	response = GetMapResponse{Url: redirectionMap.Url}
 	ctx.JSON(http.StatusOK, response)
@@ -55,8 +55,8 @@ func (server *Server) getMap(ctx *gin.Context) {
 
 }
 
-func getEntryFromRedis(ctx *gin.Context, server *Server, uuid string) string {
-	redisKey := util.REDIS_REDIRECTION_KEY_PREFIX + uuid
+func getEntryFromRedis(ctx *gin.Context, server *Server, uid string) string {
+	redisKey := util.REDIS_REDIRECTION_KEY_PREFIX + uid
 	redisValue, err := server.redisStore.Client.Get(ctx, redisKey).Result()
 
 	if err == redis.Nil {
@@ -73,8 +73,8 @@ func getEntryFromRedis(ctx *gin.Context, server *Server, uuid string) string {
 	return redisValue
 }
 
-func setEntryInRedis(ctx *gin.Context, server *Server, uuid string, url string) {
-	redisKey := util.REDIS_REDIRECTION_KEY_PREFIX + uuid
+func setEntryInRedis(ctx *gin.Context, server *Server, uid string, url string) {
+	redisKey := util.REDIS_REDIRECTION_KEY_PREFIX + uid
 	redisValue := url
 	err := server.redisStore.Client.Set(ctx, redisKey, redisValue, util.REDIS_REDIRECTION_TTL).Err()
 	if err != nil {

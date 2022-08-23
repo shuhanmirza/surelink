@@ -10,33 +10,33 @@ import (
 )
 
 const createRedirectionMap = `-- name: CreateRedirectionMap :one
-INSERT INTO redirection_map (uuid, url)
+INSERT INTO redirection_map (uid, url)
 VALUES ($1, $2)
-RETURNING uuid, url, created_at
+RETURNING uid, url, created_at
 `
 
 type CreateRedirectionMapParams struct {
-	Uuid string `json:"uuid"`
-	Url  string `json:"url"`
+	Uid string `json:"uid"`
+	Url string `json:"url"`
 }
 
 func (q *Queries) CreateRedirectionMap(ctx context.Context, arg CreateRedirectionMapParams) (RedirectionMap, error) {
-	row := q.db.QueryRowContext(ctx, createRedirectionMap, arg.Uuid, arg.Url)
+	row := q.db.QueryRowContext(ctx, createRedirectionMap, arg.Uid, arg.Url)
 	var i RedirectionMap
-	err := row.Scan(&i.Uuid, &i.Url, &i.CreatedAt)
+	err := row.Scan(&i.Uid, &i.Url, &i.CreatedAt)
 	return i, err
 }
 
 const getRedirectionMap = `-- name: GetRedirectionMap :one
-SELECT uuid, url, created_at
+SELECT uid, url, created_at
 from redirection_map
-WHERE uuid = $1
+WHERE uid = $1
 LIMIT 1
 `
 
-func (q *Queries) GetRedirectionMap(ctx context.Context, uuid string) (RedirectionMap, error) {
-	row := q.db.QueryRowContext(ctx, getRedirectionMap, uuid)
+func (q *Queries) GetRedirectionMap(ctx context.Context, uid string) (RedirectionMap, error) {
+	row := q.db.QueryRowContext(ctx, getRedirectionMap, uid)
 	var i RedirectionMap
-	err := row.Scan(&i.Uuid, &i.Url, &i.CreatedAt)
+	err := row.Scan(&i.Uid, &i.Url, &i.CreatedAt)
 	return i, err
 }

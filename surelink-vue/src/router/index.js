@@ -17,7 +17,7 @@ const routes = [
         component: () => import('../components/NotFound.vue')
     },
     {
-        path: '/:link_uuid',
+        path: '/:uid',
         name: 'redirection',
         component: () => import('../components/RedirectionConfirmation')
     }

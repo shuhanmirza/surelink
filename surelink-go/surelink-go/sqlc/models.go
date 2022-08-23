@@ -9,7 +9,7 @@ import (
 )
 
 type RedirectionMap struct {
-	Uuid      string    `json:"uuid"`
+	Uid       string    `json:"uid"`
 	Url       string    `json:"url"`
 	CreatedAt time.Time `json:"created_at"`
 }
