@@ -18,7 +18,9 @@ func NewServer(store *db.Store, redisStore *gedis.RedisStore) *Server {
 	server := &Server{store: store, redisStore: redisStore}
 	router := gin.Default()
 
-	router.GET(PREFIX_PATH+"/get-map", server.getMap)
+	router.Use(CORS())
+
+	router.POST(PREFIX_PATH+"/get-map", server.getMap)
 	server.router = router
 
 	return server
@@ -31,5 +33,19 @@ func (server *Server) Start(address string) error {
 func errorResponse(err error) gin.H {
 	return gin.H{
 		"error": err.Error(),
+	}
+}
+
+func CORS() gin.HandlerFunc {
+	// TO allow CORS
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
 	}
 }
