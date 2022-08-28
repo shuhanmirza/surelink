@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
+	"os"
 	"surelink-go/goserver"
 	gedis "surelink-go/redisStore"
 	db "surelink-go/sqlc"
@@ -11,6 +12,9 @@ import (
 )
 
 func main() {
+
+	initialTests()
+
 	globalConfig, err := util.LoadGlobalConfig(".")
 	if err != nil {
 		log.Fatal("can not load global config", err)
@@ -30,4 +34,10 @@ func main() {
 		log.Fatal("can't start the server", err)
 	}
 
+}
+
+func initialTests() {
+	if _, err := os.Stat(util.FONT_COMIC_PATH); err != nil {
+		panic(err.Error())
+	}
 }

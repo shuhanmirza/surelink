@@ -6,7 +6,8 @@ import (
 	db "surelink-go/sqlc"
 )
 
-const PREFIX_PATH = "/redirection"
+const REDIRECTION_PATH_PREFIX = "/redirection"
+const CAPCTHA_PATH_PREFIX = "/captcha"
 
 type Server struct {
 	store      *db.Store
@@ -20,7 +21,9 @@ func NewServer(store *db.Store, redisStore *gedis.RedisStore) *Server {
 
 	router.Use(CORS())
 
-	router.POST(PREFIX_PATH+"/get-map", server.getMap)
+	router.POST(REDIRECTION_PATH_PREFIX+"/get-map", server.getMap)
+	router.GET(CAPCTHA_PATH_PREFIX+"/get-captcha", server.getCaptcha)
+
 	server.router = router
 
 	return server
