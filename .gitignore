@@ -1,3 +1,4 @@
+DockerVolumes/postgres-data/*
 .idea
 # Logs
 logs

@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  vueserver:
+    build:
+      context: .
+      dockerfile: Dockerfiles/VueDockerFile
+    restart: unless-stopped
+    container_name: vueserver-surelink
+    environment:
+      VIRTUAL_HOST: surel.ink
+      VIRTUAL_PORT: 8080
+      LETSENCRYPT_HOST: surel.ink
+      LETSENCRYPT_EMAIL: shuhan.mirza@gmail.com
+    # ports:
+    #   - "8080:8080"
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
+volumes:
+  data:
