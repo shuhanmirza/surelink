@@ -9,6 +9,19 @@ import (
 	"context"
 )
 
+const checkIfUidExists = `-- name: CheckIfUidExists :one
+SELECT count(*)
+FROM redirection_map
+WHERE uid = $1
+`
+
+func (q *Queries) CheckIfUidExists(ctx context.Context, uid string) (int64, error) {
+	row := q.db.QueryRowContext(ctx, checkIfUidExists, uid)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createRedirectionMap = `-- name: CreateRedirectionMap :one
 INSERT INTO redirection_map (uid, url)
 VALUES ($1, $2)

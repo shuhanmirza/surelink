@@ -8,3 +8,8 @@ SELECT *
 from redirection_map
 WHERE uid = $1
 LIMIT 1;
+
+-- name: CheckIfUidExists :one
+SELECT count(*)
+FROM redirection_map
+WHERE uid = $1;
