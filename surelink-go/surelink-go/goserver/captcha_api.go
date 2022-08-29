@@ -23,11 +23,14 @@ func (server *Server) getCaptcha(ctx *gin.Context) {
 
 	captchaStr, captchaImgB64, err := generateCaptchaImage()
 	if err != nil {
-		//handle error
+		log.Println("error while generating captcha")
+		log.Println(err)
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 	}
+
 	captchaUuid := uuid.New()
 
-	enterCaptchaToRedis(captchaStr)
+	go enterCaptchaToRedis(ctx, server, captchaUuid.String(), captchaStr)
 
 	response = GetCaptchaResponse{Uuid: captchaUuid.String(), Img: captchaImgB64}
 	ctx.JSON(http.StatusOK, response)
@@ -35,8 +38,13 @@ func (server *Server) getCaptcha(ctx *gin.Context) {
 
 }
 
-func enterCaptchaToRedis(string2 string) {
-	// add captcha in redis
+func enterCaptchaToRedis(ctx *gin.Context, server *Server, captchaUuid string, captchaStr string) {
+	redisKey := util.REDIS_CAPTCHA_KEY_PREFIX + captchaUuid
+	redisValue := captchaStr
+	err := server.redisStore.Client.Set(ctx, redisKey, redisValue, util.REDIS_CAPTCHA_TTL).Err()
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
 
 func generateCaptchaImage() (string, string, error) {
