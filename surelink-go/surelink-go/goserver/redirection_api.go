@@ -149,7 +149,12 @@ func validateCaptchaFromRedis(ctx *gin.Context, server *Server, captchaUuid stri
 		log.Println(err.Error())
 		return false
 	}
-	return captchaValue == redisValue
+	if captchaValue == redisValue {
+		go server.redisStore.Client.Del(ctx, redisKey) //delete key upon validation
+		return true
+	} else {
+		return false
+	}
 }
 
 func getRedirectionMapFromRedis(ctx *gin.Context, server *Server, uid string) string {
