@@ -26,6 +26,7 @@ func (server *Server) getCaptcha(ctx *gin.Context) {
 		log.Println("error while generating captcha")
 		log.Println(err)
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	captchaUuid := uuid.New()
@@ -64,7 +65,7 @@ func generateCaptchaImage() (string, string, error) {
 		color.RGBA{B: 255, A: 255}, //blue
 		color.RGBA{G: 153, A: 255}) //light-green
 
-	captchaImg, captchaStr := captchaGenerator.Create(util.CAPTHCA_TEXT_LENGTH, captcha.ALL)
+	captchaImg, captchaStr := captchaGenerator.Create(util.CAPTCHA_TEXT_LENGTH, captcha.ALL)
 
 	var buff bytes.Buffer
 	err = png.Encode(&buff, captchaImg)

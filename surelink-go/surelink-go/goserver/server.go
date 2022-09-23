@@ -21,7 +21,9 @@ func NewServer(store *db.Store, redisStore *gedis.RedisStore) *Server {
 
 	router.Use(CORS())
 
-	router.POST(REDIRECTION_PATH_PREFIX+"/get-map", server.getMap)
+	router.GET(REDIRECTION_PATH_PREFIX+"/get-map", server.getMap)
+	router.POST(REDIRECTION_PATH_PREFIX+"/set-map", server.setMap)
+
 	router.GET(CAPCTHA_PATH_PREFIX+"/get-captcha", server.getCaptcha)
 
 	server.router = router
