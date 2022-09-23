@@ -15,6 +15,8 @@ func main() {
 
 	initialTests()
 
+	util.RandomInit()
+
 	globalConfig, err := util.LoadGlobalConfig(".")
 	if err != nil {
 		log.Fatal("can not load global config", err)

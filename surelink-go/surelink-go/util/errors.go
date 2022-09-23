@@ -29,3 +29,21 @@ type UnprecedentedDbError struct{}
 func (m *UnprecedentedDbError) Error() string {
 	return "unprecedented db error"
 }
+
+type UrlProtocolNotAcceptedError struct{}
+
+func (m *UrlProtocolNotAcceptedError) Error() string {
+	return "invalid url protocol"
+}
+
+type UrlHostInvalidError struct{}
+
+func (m *UrlHostInvalidError) Error() string {
+	return "invalid url host"
+}
+
+type UrlParsingError struct{}
+
+func (m *UrlParsingError) Error() string {
+	return "invalid url"
+}

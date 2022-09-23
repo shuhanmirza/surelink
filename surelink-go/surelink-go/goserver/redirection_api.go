@@ -84,16 +84,16 @@ func (server *Server) setMap(ctx *gin.Context) {
 		return
 	}
 
-	//captcha removal on validation
-
-	//validate url with regex
-	/*
-			    https://regexr.com/39nr7
-			    https://uibakery.io/regex-library/url-regex-java
-			    https://mathiasbynens.be/demo/url-regex
-				https://gist.github.com/dperini/729294
-		        https://gist.github.com/parkerrobison/d151c4c26f6c37f62fe180028c95346c
-	*/
+	urlValidity, err := util.IsValidHttpsUrl(request.Url)
+	if err != nil {
+		log.Println("error while checking url validity")
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	} else if urlValidity == false {
+		log.Println("invalid url")
+		ctx.JSON(http.StatusBadRequest, errorResponse(&util.UrlParsingError{}))
+		return
+	}
 
 	shortUrlUid, err := generateShortUrlUid(ctx, server)
 	if err != nil {
@@ -149,12 +149,13 @@ func validateCaptchaFromRedis(ctx *gin.Context, server *Server, captchaUuid stri
 		log.Println(err.Error())
 		return false
 	}
+
 	if captchaValue == redisValue {
 		go server.redisStore.Client.Del(ctx, redisKey) //delete key upon validation
 		return true
-	} else {
-		return false
 	}
+
+	return false
 }
 
 func getRedirectionMapFromRedis(ctx *gin.Context, server *Server, uid string) string {
