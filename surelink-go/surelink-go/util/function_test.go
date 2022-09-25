@@ -100,13 +100,13 @@ func TestUrlCheck(t *testing.T) {
 
 	log.Println("~~~~~~ VALID URLs")
 	for i := 0; i < len(validUrlList); i++ {
-		valid, _ := IsValidHttpsUrl(validUrlList[i])
+		valid, _ := IsValidHttpsUrl(ctx, redisStore, validUrlList[i])
 		log.Println(validUrlList[i], valid)
 	}
 
 	log.Println("~~~~~~ INVALID URLs")
 	for i := 0; i < len(inValidUrlList); i++ {
-		valid, _ := IsValidHttpsUrl(inValidUrlList[i])
+		valid, _ := IsValidHttpsUrl(ctx, redisStore, inValidUrlList[i])
 		log.Println(inValidUrlList[i], valid)
 	}
 }

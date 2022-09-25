@@ -84,7 +84,7 @@ func (server *Server) setMap(ctx *gin.Context) {
 		return
 	}
 
-	urlValidity, err := util.IsValidHttpsUrl(request.Url)
+	urlValidity, err := util.IsValidHttpsUrl(ctx, server.redisStore, request.Url)
 	if err != nil {
 		log.Println("error while checking url validity")
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
