@@ -1,22 +1,13 @@
-import {createApp} from 'vue'
+import '@babel/polyfill'
+import 'mutationobserver-shim'
+import Vue from 'vue'
+import './plugins/bootstrap-vue'
 import App from './App.vue'
-import vuetify from './plugins/vuetify'
-import {loadFonts} from './plugins/webfontloader'
 import router from './router'
-import ApiClient from "@/util/apiclient";
 
-loadFonts()
+Vue.config.productionTip = false
 
-const app = createApp(App);
-app.use(router)
-    .use(vuetify)
-    .mount('#app')
-
-console.log(process.env.VUE_APP_SERVER_BASE_PATH)
-
-
-app.config.globalProperties.$apiClient = new ApiClient(
-    process.env.VUE_APP_SERVER_BASE_PATH)
-
-
-
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app')
