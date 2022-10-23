@@ -3,7 +3,7 @@ services:
   vueserver:
     build:
       context: .
-      dockerfile: Dockerfiles/VueDockerFile
+      dockerfile: DockerFiles/VueDockerFile
     restart: unless-stopped
     container_name: vueserver-surelink
     environment:
