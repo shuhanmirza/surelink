@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  goserver:
+    build:
+      context: .
+      dockerfile: DockerFiles/GoDockerFile
+    restart: unless-stopped
+    container_name: goserver-surelink
+    environment:
+      VIRTUAL_HOST: api.surel.ink
+      VIRTUAL_PORT: 9000
+      LETSENCRYPT_HOST: api.surel.ink
+      LETSENCRYPT_EMAIL: shuhan.mirza@gmail.com
+    ports:
+       - "9000:9000"
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
+volumes:
+  data:
