@@ -12,15 +12,15 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: surelink-db
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
 
   redis:
     image: redis:7.0.4-alpine
     container_name: redis7
     restart: always
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
 
 networks:
   default:
