@@ -1,0 +1,11 @@
+
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
+
+$primary: #42b883;
+$card-radius: 2.5rem;
+$input-radius: 30px;
+$input-focus-border-color: $primary;
+$input-focus-box-shadow-size: 0 0 0 0;
+
+@import '~bulma';
