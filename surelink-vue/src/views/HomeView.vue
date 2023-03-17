@@ -25,7 +25,7 @@ export default {
   background-image: url('../assets/images/bg.svg');
   background-size: cover;
   background-repeat: no-repeat;
-  min-height: 800px;
+  height: 600px;
   border-bottom-left-radius: 20%;
   border-bottom-right-radius: 20%;
 }

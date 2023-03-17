@@ -49,7 +49,10 @@ export default {
 
 nav.navbar {
   min-height: unset;
-  height: 3.8rem;
+  height: 0;
+  font-family: 'Roboto';
+  padding: 0;
+
 }
 
 a {
