@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/vue-fontawesome": "^2.0.10",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.17.3",
@@ -17,6 +18,7 @@
     "popper.js": "^1.16.1",
     "portal-vue": "^2.1.7",
     "vue": "^2.6.14",
+    "vue-js-counter": "^1.0.3",
     "vue-router": "^3.5.1"
   },
   "devDependencies": {
