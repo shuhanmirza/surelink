@@ -1,11 +1,13 @@
-
 @import "~bulma/sass/utilities/initial-variables";
 @import "~bulma/sass/utilities/functions";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
-$primary: #42b883;
+$primary: #86C8BC;
 $card-radius: 2.5rem;
 $input-radius: 30px;
 $input-focus-border-color: $primary;
 $input-focus-box-shadow-size: 0 0 0 0;
+$family-primary: 'Roboto';
+
 
 @import '~bulma';
