@@ -1,15 +1,15 @@
--- name: CreateRedirectionMap :one
+-- name: CreateUrlMap :one
 INSERT INTO url_map (uid, url)
 VALUES ($1, $2)
 RETURNING *;
 
--- name: GetRedirectionMap :one
+-- name: GetUrlMap :one
 SELECT *
 from url_map
 WHERE uid = $1
 LIMIT 1;
 
--- name: CheckIfUidExists :one
+-- name: CheckIfUidExistsInUrlMap :one
 SELECT count(*)
 FROM url_map
 WHERE uid = $1;
