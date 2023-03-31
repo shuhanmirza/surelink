@@ -1,4 +1,4 @@
-package gedis
+package infrastructure
 
 import (
 	"context"
@@ -6,13 +6,12 @@ import (
 	"log"
 )
 
-//RedisStore is used for interacting with redisClient
-type RedisStore struct {
+// Cache is used for interacting with redisClient
+type Cache struct {
 	Client *redis.Client
 }
 
-//NewRedisStore creates a new RedisStore
-func NewRedisStore(redisUrl string) *RedisStore {
+func NewCache(redisUrl string) *Cache {
 	client := redis.NewClient(&redis.Options{
 		Addr: redisUrl,
 	})
@@ -23,7 +22,7 @@ func NewRedisStore(redisUrl string) *RedisStore {
 		panic(err)
 	}
 
-	return &RedisStore{
+	return &Cache{
 		Client: client,
 	}
 }

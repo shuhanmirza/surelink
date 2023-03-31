@@ -15,12 +15,12 @@ services:
     # ports:
     #   - "5432:5432"
 
-  redis:
+  redis.surel.ink:
     image: redis:7.0.4-alpine
     container_name: redis7
     restart: always
-    # ports:
-    #   - "6379:6379"
+    ports:
+       - "6379:6379"
 
 networks:
   default:

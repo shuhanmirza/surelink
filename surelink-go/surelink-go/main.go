@@ -37,12 +37,18 @@ func main() {
 	//	log.Fatal("can't start the server", err)
 	//}
 
+	//database and cache
+	cache := infrastructure.NewCache("localhost:6379")
+
 	// initialize gin router
 	log.Println("Initializing Routes")
 	ginRouter := infrastructure.NewGinRouter()
 
+	//initialize service
+	cacheService := service.NewCacheService(cache)
+
 	// captcha
-	captchaService := service.NewCaptchaService()
+	captchaService := service.NewCaptchaService(cacheService)
 	captchaController := controller.NewCaptchaController(captchaService)
 	captchaRoute := routes.NewCaptchaRoute(captchaController, ginRouter)
 	captchaRoute.Setup()

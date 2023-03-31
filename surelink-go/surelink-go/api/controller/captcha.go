@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"surelink-go/api/service"
+	"surelink-go/util"
 )
 
 type CaptchaController struct {
@@ -17,5 +18,9 @@ func NewCaptchaController(captchaService service.CaptchaService) CaptchaControll
 }
 
 func (c CaptchaController) GetCaptcha(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, nil)
+	getCaptchaResponse, err := c.captchaService.GetNewCaptcha(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+	}
+	ctx.JSON(http.StatusOK, getCaptchaResponse)
 }
