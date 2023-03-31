@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS "redirection_map";
+DROP TABLE IF EXISTS "url_map";

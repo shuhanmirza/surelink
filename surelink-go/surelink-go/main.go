@@ -1,39 +1,57 @@
 package main
 
 import (
-	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
 	"os"
-	"surelink-go/goserver"
-	gedis "surelink-go/redisStore"
-	db "surelink-go/sqlc"
+	"surelink-go/api/controller"
+	"surelink-go/api/routes"
+	"surelink-go/api/service"
+	_ "surelink-go/api/service"
+	"surelink-go/infrastructure"
 	"surelink-go/util"
 )
 
 func main() {
 
-	initialTests()
+	//initialTests()
+	//
+	//util.RandomInit()
+	//
+	//globalConfig, err := util.LoadGlobalConfig(".")
+	//if err != nil {
+	//	log.Fatal("can not load global config", err)
+	//}
+	//
+	//conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
+	//if err != nil {
+	//	log.Fatal("can't connect to the database", err)
+	//}
+	//store := db.NewStore(conn)
+	//
+	//redisStore := gedis.NewRedisStore(globalConfig.RedisUrl)
+	//
+	//serverObj := goserver.NewServer(store, redisStore)
+	//err = serverObj.Start(globalConfig.ServerAddress)
+	//if err != nil {
+	//	log.Fatal("can't start the server", err)
+	//}
 
-	util.RandomInit()
+	// initialize gin router
+	log.Println("Initializing Routes")
+	ginRouter := infrastructure.NewGinRouter()
 
-	globalConfig, err := util.LoadGlobalConfig(".")
+	// captcha
+	captchaService := service.NewCaptchaService()
+	captchaController := controller.NewCaptchaController(captchaService)
+	captchaRoute := routes.NewCaptchaRoute(captchaController, ginRouter)
+	captchaRoute.Setup()
+
+	serverAddress := "0.0.0.0:9000"
+	err := ginRouter.Gin.Run(serverAddress)
 	if err != nil {
-		log.Fatal("can not load global config", err)
-	}
-
-	conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
-	if err != nil {
-		log.Fatal("can't connect to the database", err)
-	}
-	store := db.NewStore(conn)
-
-	redisStore := gedis.NewRedisStore(globalConfig.RedisUrl)
-
-	serverObj := goserver.NewServer(store, redisStore)
-	err = serverObj.Start(globalConfig.ServerAddress)
-	if err != nil {
-		log.Fatal("can't start the server", err)
+		log.Println(err)
+		log.Fatal("could not start APIs")
 	}
 
 }
