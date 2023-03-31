@@ -1,5 +1,5 @@
 .idea
-surelink-go/app.env
+# surelink-go/app.env
 # Binaries for programs and plugins
 *.exe
 *.exe~
