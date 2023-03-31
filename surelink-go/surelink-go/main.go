@@ -13,15 +13,13 @@ import (
 )
 
 func main() {
+	initialTests()
 
-	//initialTests()
-	//
-	//util.RandomInit()
-	//
-	//globalConfig, err := util.LoadGlobalConfig(".")
-	//if err != nil {
-	//	log.Fatal("can not load global config", err)
-	//}
+	globalConfig, err := util.LoadGlobalConfig(".")
+	if err != nil {
+		log.Fatal("can not load global config", err)
+	}
+
 	//
 	//conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
 	//if err != nil {
@@ -37,8 +35,11 @@ func main() {
 	//	log.Fatal("can't start the server", err)
 	//}
 
+	//miscellaneous
+	//random := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	//database and cache
-	cache := infrastructure.NewCache("localhost:6379")
+	cache := infrastructure.NewCache(globalConfig.RedisUrl)
 
 	// initialize gin router
 	log.Println("Initializing Routes")
@@ -46,6 +47,7 @@ func main() {
 
 	//initialize service
 	cacheService := service.NewCacheService(cache)
+	//utilityService := service.NewUtilityService(cache, random)
 
 	// captcha
 	captchaService := service.NewCaptchaService(cacheService)
@@ -54,7 +56,7 @@ func main() {
 	captchaRoute.Setup()
 
 	serverAddress := "0.0.0.0:9000"
-	err := ginRouter.Gin.Run(serverAddress)
+	err = ginRouter.Gin.Run(serverAddress)
 	if err != nil {
 		log.Println(err)
 		log.Fatal("could not start APIs")

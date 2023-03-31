@@ -6,7 +6,6 @@ import (
 	"log"
 )
 
-// Cache is used for interacting with redisClient
 type Cache struct {
 	Client *redis.Client
 }
