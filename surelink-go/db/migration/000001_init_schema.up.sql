@@ -1,4 +1,4 @@
-CREATE TABLE "redirection_map"
+CREATE TABLE "url_map"
 (
     "uid"       varchar PRIMARY KEY NOT NULL,
     "url"        varchar             NOT NULL,

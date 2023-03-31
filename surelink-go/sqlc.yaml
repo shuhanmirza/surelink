@@ -1,7 +1,7 @@
 version: "1"
 packages:
   - name: "db"
-    path: "surelink-go/sqlc/"
+    path: "surelink-go/infrastructure/sqlc/"
     queries: "db/query/"
     schema: "db/migration/"
     engine: "postgresql"
