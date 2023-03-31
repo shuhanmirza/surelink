@@ -46,11 +46,10 @@ func main() {
 	ginRouter := infrastructure.NewGinRouter()
 
 	//initialize service
-	cacheService := service.NewCacheService(cache)
 	//utilityService := service.NewUtilityService(cache, random)
 
 	// captcha
-	captchaService := service.NewCaptchaService(cacheService)
+	captchaService := service.NewCaptchaService(cache)
 	captchaController := controller.NewCaptchaController(captchaService)
 	captchaRoute := routes.NewCaptchaRoute(captchaController, ginRouter)
 	captchaRoute.Setup()
