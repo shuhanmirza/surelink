@@ -10,16 +10,17 @@ import (
 	"image/png"
 	"log"
 	"surelink-go/api/structs"
+	"surelink-go/infrastructure"
 	"surelink-go/util"
 )
 
 type CaptchaService struct {
-	cacheService CacheService
+	cache *infrastructure.Cache
 }
 
-func NewCaptchaService(cacheService CacheService) CaptchaService {
+func NewCaptchaService(cache *infrastructure.Cache) CaptchaService {
 	return CaptchaService{
-		cacheService: cacheService,
+		cache: cache,
 	}
 }
 
@@ -33,7 +34,7 @@ func (s CaptchaService) GetNewCaptcha(ctx *gin.Context) (response structs.GetCap
 
 	captchaUuid := uuid.New()
 
-	go s.cacheService.SaveNewCaptcha(ctx, captchaUuid.String(), captchaStr)
+	go s.SaveNewCaptcha(ctx, captchaUuid.String(), captchaStr)
 
 	response = structs.GetCaptchaResponse{Uuid: captchaUuid.String(), Img: captchaImgB64}
 
@@ -69,4 +70,13 @@ func generateCaptchaImage() (captchaStr string, captchaImgB64 string, err error)
 
 	return captchaStr, captchaImgB64, nil
 
+}
+
+func (s CaptchaService) SaveNewCaptcha(ctx *gin.Context, captchaUuid string, captchaStr string) {
+	redisKey := util.REDIS_CAPTCHA_KEY_PREFIX + captchaUuid
+	redisValue := captchaStr
+	err := s.cache.Client.Set(ctx, redisKey, redisValue, util.REDIS_CAPTCHA_TTL).Err()
+	if err != nil {
+		log.Println(err.Error())
+	}
 }

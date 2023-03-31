@@ -3,13 +3,13 @@ package service
 import "surelink-go/infrastructure"
 
 type RedirectionService struct {
-	store        *infrastructure.Store
-	cacheService CacheService
+	store *infrastructure.Store
+	cache *infrastructure.Cache
 }
 
-func NewRedirectionService(cacheService CacheService, store *infrastructure.Store) RedirectionService {
+func NewRedirectionService(store *infrastructure.Store, cache *infrastructure.Cache) RedirectionService {
 	return RedirectionService{
-		store:        store,
-		cacheService: cacheService,
+		store: store,
+		cache: cache,
 	}
 }
