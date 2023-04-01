@@ -62,7 +62,7 @@ func (s UtilityService) IsValidHttpsUrl(ctx *gin.Context, urlString string) (boo
 		return true, nil
 	}
 
-	if false == redisValue {
+	if redisValue == false {
 		log.Println("error while url host lookup")
 		log.Println(err)
 		return false, &util.UrlHostInvalidError{}
