@@ -1,8 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
+	"math/rand"
 	"os"
 	"surelink-go/api/controller"
 	"surelink-go/api/routes"
@@ -10,6 +12,7 @@ import (
 	_ "surelink-go/api/service"
 	"surelink-go/infrastructure"
 	"surelink-go/util"
+	"time"
 )
 
 func main() {
@@ -20,25 +23,16 @@ func main() {
 		log.Fatal("can not load global config", err)
 	}
 
-	//
-	//conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
-	//if err != nil {
-	//	log.Fatal("can't connect to the database", err)
-	//}
-	//store := db.NewStore(conn)
-	//
-	//redisStore := gedis.NewRedisStore(globalConfig.RedisUrl)
-	//
-	//serverObj := goserver.NewServer(store, redisStore)
-	//err = serverObj.Start(globalConfig.ServerAddress)
-	//if err != nil {
-	//	log.Fatal("can't start the server", err)
-	//}
-
 	//miscellaneous
-	//random := rand.New(rand.NewSource(time.Now().UnixNano()))
+	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	//database and cache
+	conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
+	if err != nil {
+		log.Fatal("can't connect to the database", err)
+	}
+	store := infrastructure.NewStore(conn)
+
 	cache := infrastructure.NewCache(globalConfig.RedisUrl)
 
 	// initialize gin router
@@ -46,7 +40,7 @@ func main() {
 	ginRouter := infrastructure.NewGinRouter()
 
 	//initialize service
-	//utilityService := service.NewUtilityService(cache, random)
+	utilityService := service.NewUtilityService(cache, random)
 
 	// captcha
 	captchaService := service.NewCaptchaService(cache)
@@ -54,7 +48,13 @@ func main() {
 	captchaRoute := routes.NewCaptchaRoute(captchaController, ginRouter)
 	captchaRoute.Setup()
 
-	serverAddress := "0.0.0.0:9000"
+	//redirection
+	redirectionService := service.NewRedirectionService(store, cache, &utilityService)
+	redirectionController := controller.NewRedirectionController(redirectionService)
+	redirectionRoute := routes.NewRedirectionRoute(redirectionController, ginRouter)
+	redirectionRoute.Setup()
+
+	serverAddress := globalConfig.ServerAddress
 	err = ginRouter.Gin.Run(serverAddress)
 	if err != nil {
 		log.Println(err)
