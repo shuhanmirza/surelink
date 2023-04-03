@@ -18,6 +18,12 @@ func (m *ImgEncodingFailed) Error() string {
 	return "image encoding failed"
 }
 
+type CaptchaGenerationFailed struct{}
+
+func (m *CaptchaGenerationFailed) Error() string {
+	return "captcha generation failed"
+}
+
 type CaptchaValidationFailed struct{}
 
 func (m *CaptchaValidationFailed) Error() string {

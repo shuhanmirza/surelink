@@ -2,13 +2,17 @@ package util
 
 import "time"
 
-const REDIS_REDIRECTION_KEY_PREFIX = "CACHE_REDIRECTION_"
-const REDIS_CAPTCHA_KEY_PREFIX = "CACHE_CAPTCHA_"
-const REDIS_VALID_HOST_URL_PREFIX = "CACHE_VALID_HOST_URL_"
-const FONT_COMIC_PATH = "assets/comic.ttf"
-const CAPTCHA_TEXT_LENGTH = 6
-const SHORT_URL_UID_LENGTH = 6
+const RedisRedirectionKeyPrefix = "CACHE_REDIRECTION_"
+const RedisCaptchaKeyPrefix = "CACHE_CAPTCHA_"
+const RedisCaptchaQueueKey = "CACHE_QUEUE_CAPTCHA"
+const RedisValidHostUrlPrefix = "CACHE_VALID_HOST_URL_"
+const FontComicPath = "assets/comic.ttf"
+const CaptchaTextLength = 6
+const ShortUrlUidLength = 6
+const CaptchaQueueMaxSize = 60
 
-var REDIS_CAPTCHA_TTL, _ = time.ParseDuration("5m")
-var REDIS_URL_HOST_VALIDITY_TTL, _ = time.ParseDuration("120h")
-var REDIS_URL_MAP_TTL, _ = time.ParseDuration("5m")
+var RedisCaptchaTtl, _ = time.ParseDuration("5m")
+var RedisUrlHostValidityTtl, _ = time.ParseDuration("120h")
+var RedisUrlMapTtl, _ = time.ParseDuration("5m")
+
+const CronSpecEvery10Min = "@every 1m"

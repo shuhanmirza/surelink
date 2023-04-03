@@ -87,7 +87,7 @@ func (s RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapReque
 }
 
 func (s RedirectionService) generateShortUrlUid(ctx *gin.Context) (uidString string, err error) {
-	uidString = s.utilityService.RandomStringAlphabet(util.SHORT_URL_UID_LENGTH)
+	uidString = s.utilityService.RandomStringAlphabet(util.ShortUrlUidLength)
 
 	count, err := s.store.Queries.CheckIfUidExistsInUrlMap(ctx, uidString)
 	if err != nil {
@@ -106,7 +106,7 @@ func (s RedirectionService) generateShortUrlUid(ctx *gin.Context) (uidString str
 }
 
 func (s RedirectionService) validateCaptchaFromRedis(ctx *gin.Context, captchaUuid string, captchaValue string) bool {
-	redisKey := util.REDIS_CAPTCHA_KEY_PREFIX + captchaUuid
+	redisKey := util.RedisCaptchaKeyPrefix + captchaUuid
 	redisValue, err := s.cache.Client.Get(ctx, redisKey).Result()
 
 	if err == redis.Nil {
@@ -124,7 +124,7 @@ func (s RedirectionService) validateCaptchaFromRedis(ctx *gin.Context, captchaUu
 }
 
 func (s RedirectionService) getUrlMapFromRedis(ctx *gin.Context, uid string) string {
-	redisKey := util.REDIS_REDIRECTION_KEY_PREFIX + uid
+	redisKey := util.RedisRedirectionKeyPrefix + uid
 	redisValue, err := s.cache.Client.Get(ctx, redisKey).Result()
 
 	if err == redis.Nil {
@@ -139,9 +139,9 @@ func (s RedirectionService) getUrlMapFromRedis(ctx *gin.Context, uid string) str
 }
 
 func (s RedirectionService) setUrlMapInRedis(ctx *gin.Context, urlMap sqlc.UrlMap) {
-	redisKey := util.REDIS_REDIRECTION_KEY_PREFIX + urlMap.Uid
+	redisKey := util.RedisRedirectionKeyPrefix + urlMap.Uid
 	redisValue := urlMap.Url
-	err := s.cache.Client.Set(ctx, redisKey, redisValue, util.REDIS_URL_MAP_TTL).Err()
+	err := s.cache.Client.Set(ctx, redisKey, redisValue, util.RedisUrlMapTtl).Err()
 	if err != nil {
 		log.Println(err.Error())
 	}
