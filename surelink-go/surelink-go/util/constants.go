@@ -15,4 +15,4 @@ var RedisCaptchaTtl, _ = time.ParseDuration("5m")
 var RedisUrlHostValidityTtl, _ = time.ParseDuration("120h")
 var RedisUrlMapTtl, _ = time.ParseDuration("5m")
 
-const CronSpecEvery10Min = "@every 1m"
+const CronSpecEveryOneMin = "@every 1m"
