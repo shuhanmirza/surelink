@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	_ "github.com/lib/pq"
+	"github.com/robfig/cron/v3"
 	"log"
 	"math/rand"
 	"os"
@@ -10,6 +12,7 @@ import (
 	"surelink-go/api/routes"
 	"surelink-go/api/service"
 	_ "surelink-go/api/service"
+	"surelink-go/cronjob"
 	"surelink-go/infrastructure"
 	"surelink-go/util"
 	"time"
@@ -25,6 +28,8 @@ func main() {
 
 	//miscellaneous
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
+	cronScheduler := cron.New()
+	go cronScheduler.Run()
 
 	//database and cache
 	conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
@@ -54,17 +59,31 @@ func main() {
 	redirectionRoute := routes.NewRedirectionRoute(redirectionController, ginRouter)
 	redirectionRoute.Setup()
 
+	//cronjobs
+	go func() {
+		cronJobCtx := context.Background()
+
+		captchaCronJob := cronjob.NewCaptchaCronJob(cache)
+		_, err := cronScheduler.AddFunc(util.CronSpecEvery10Min, func() {
+			captchaCronJob.Run(cronJobCtx)
+		})
+
+		if err != nil {
+			log.Println(err)
+		}
+	}()
+
+	//server
 	serverAddress := globalConfig.ServerAddress
 	err = ginRouter.Gin.Run(serverAddress)
 	if err != nil {
 		log.Println(err)
 		log.Fatal("could not start APIs")
 	}
-
 }
 
 func initialTests() {
-	if _, err := os.Stat(util.FONT_COMIC_PATH); err != nil {
+	if _, err := os.Stat(util.FontComicPath); err != nil {
 		panic(err.Error())
 	}
 }

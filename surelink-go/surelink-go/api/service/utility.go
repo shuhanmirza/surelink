@@ -42,7 +42,7 @@ func (s UtilityService) IsValidHttpsUrl(ctx *gin.Context, urlString string) (boo
 		return false, &util.UrlProtocolNotAcceptedError{}
 	}
 
-	redisKey := util.REDIS_VALID_HOST_URL_PREFIX + urlObj.Host
+	redisKey := util.RedisValidHostUrlPrefix + urlObj.Host
 	redisValue, err := s.cache.Client.Get(ctx, redisKey).Bool() //returns err when redis entry does not exist
 
 	if err != nil {
@@ -52,12 +52,12 @@ func (s UtilityService) IsValidHttpsUrl(ctx *gin.Context, urlString string) (boo
 			log.Println("error while url host lookup")
 			log.Println(err)
 
-			go s.cache.Client.Set(ctx, redisKey, false, util.REDIS_URL_HOST_VALIDITY_TTL)
+			go s.cache.Client.Set(ctx, redisKey, false, util.RedisUrlHostValidityTtl)
 
 			return false, &util.UrlHostInvalidError{}
 		}
 
-		go s.cache.Client.Set(ctx, redisKey, true, util.REDIS_URL_HOST_VALIDITY_TTL)
+		go s.cache.Client.Set(ctx, redisKey, true, util.RedisUrlHostValidityTtl)
 
 		return true, nil
 	}
