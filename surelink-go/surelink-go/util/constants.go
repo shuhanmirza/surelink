@@ -11,3 +11,4 @@ const SHORT_URL_UID_LENGTH = 6
 
 var REDIS_CAPTCHA_TTL, _ = time.ParseDuration("5m")
 var REDIS_URL_HOST_VALIDITY_TTL, _ = time.ParseDuration("120h")
+var REDIS_URL_MAP_TTL, _ = time.ParseDuration("5m")
