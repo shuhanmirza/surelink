@@ -64,12 +64,12 @@ func main() {
 		cronJobCtx := context.Background()
 
 		captchaCronJob := cronjob.NewCaptchaCronJob(cache)
-		_, err := cronScheduler.AddFunc(util.CronSpecEvery10Min, func() {
+		_, errCron := cronScheduler.AddFunc(util.CronSpecEveryOneMin, func() {
 			captchaCronJob.Run(cronJobCtx)
 		})
 
-		if err != nil {
-			log.Println(err)
+		if errCron != nil {
+			log.Println(errCron)
 		}
 	}()
 
@@ -80,6 +80,8 @@ func main() {
 		log.Println(err)
 		log.Fatal("could not start APIs")
 	}
+
+	defer cronScheduler.Stop()
 }
 
 func initialTests() {
