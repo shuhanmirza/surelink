@@ -21,5 +21,6 @@ func (r RedirectionRoute) Setup() {
 	configuration := r.Handler.Gin.Group("redirection")
 	{
 		configuration.GET("/get-map", r.Controller.GetMap)
+		configuration.POST("/set-map", r.Controller.SetMap)
 	}
 }
