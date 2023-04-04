@@ -42,14 +42,14 @@ func (s CaptchaService) getCaptchaFromQueue(ctx *gin.Context) (captchaObj infras
 	if err != nil {
 		log.Println("could not get captcha from the queue")
 		log.Println(err)
-		return captchaObj, &util.CaptchaValidationFailed{}
+		return captchaObj, &util.CaptchaGenerationFailed{}
 	}
 
 	err = json.Unmarshal([]byte(captchaObjJson), &captchaObj)
 	if err != nil {
 		log.Println("invalid captcha object in the queue")
 		log.Println(err)
-		return captchaObj, &util.CaptchaValidationFailed{}
+		return captchaObj, &util.CaptchaGenerationFailed{}
 	}
 
 	return captchaObj, nil

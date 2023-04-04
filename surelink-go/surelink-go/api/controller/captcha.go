@@ -21,6 +21,7 @@ func (c CaptchaController) GetCaptcha(ctx *gin.Context) {
 	getCaptchaResponse, err := c.captchaService.GetNewCaptcha(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
 	}
 	ctx.JSON(http.StatusOK, getCaptchaResponse)
 }
