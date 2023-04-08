@@ -87,3 +87,14 @@ func (q *Queries) GetUrlMapRedirectionCount(ctx context.Context) (int64, error) 
 	err := row.Scan(&sum)
 	return sum, err
 }
+
+const incrementUrlMapTimeRedirected = `-- name: IncrementUrlMapTimeRedirected :exec
+UPDATE url_map
+SET time_redirected = time_redirected + 1
+WHERE uid = $1
+`
+
+func (q *Queries) IncrementUrlMapTimeRedirected(ctx context.Context, uid string) error {
+	_, err := q.db.ExecContext(ctx, incrementUrlMapTimeRedirected, uid)
+	return err
+}
