@@ -28,8 +28,8 @@
                   </div>
                   <div class="grid-item">
                     <div class="image-text is-centered">
-                      <img src="../../src/assets/images/light-bulb.png" width="64" height="64"/> &nbsp &nbsp
-                      <h2 class="subtitle is-size-3">MEMORIALIZE</h2>
+                      <img src="../../src/assets/images/graph.png" width="64" height="64"/> &nbsp &nbsp
+                      <h2 class="subtitle is-size-3">PROMOTE</h2>
                     </div>
                     <h3 class="is-size-6 has-text-centered">Whether you're a business owner looking to promote your products or services online or on social media who wants to share content with followers, our service can help.</h3>
                   </div>
