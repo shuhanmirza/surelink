@@ -30,6 +30,7 @@ func main() {
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 	cronScheduler := cron.New()
 	go cronScheduler.Run()
+	defer cronScheduler.Stop()
 
 	//database and cache
 	conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
@@ -59,19 +60,14 @@ func main() {
 	redirectionRoute := routes.NewRedirectionRoute(redirectionController, ginRouter)
 	redirectionRoute.Setup()
 
-	//cronjobs
-	go func() {
-		cronJobCtx := context.Background()
+	// stat
+	statService := service.NewStatService(cache, store)
+	statController := controller.NewStatController(statService)
+	statRoute := routes.NewStatRoute(statController, ginRouter)
+	statRoute.Setup()
 
-		captchaCronJob := cronjob.NewCaptchaCronJob(cache)
-		_, errCron := cronScheduler.AddFunc(util.CronSpecEveryOneMin, func() {
-			captchaCronJob.Run(cronJobCtx)
-		})
-
-		if errCron != nil {
-			log.Println(errCron)
-		}
-	}()
+	go startCronJobs(cronScheduler, cache)
+	go onStartupTasks()
 
 	//server
 	serverAddress := globalConfig.ServerAddress
@@ -80,12 +76,27 @@ func main() {
 		log.Println(err)
 		log.Fatal("could not start APIs")
 	}
-
-	defer cronScheduler.Stop()
 }
 
 func initialTests() {
 	if _, err := os.Stat(util.FontComicPath); err != nil {
 		panic(err.Error())
+	}
+}
+
+func onStartupTasks() {
+
+}
+
+func startCronJobs(cronScheduler *cron.Cron, cache *infrastructure.Cache) {
+	cronJobCtx := context.Background()
+
+	captchaCronJob := cronjob.NewCaptchaCronJob(cache)
+	_, errCron := cronScheduler.AddFunc(util.CronSpecEveryOneMin, func() {
+		captchaCronJob.Run(cronJobCtx)
+	})
+
+	if errCron != nil {
+		log.Println(errCron)
 	}
 }

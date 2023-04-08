@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"log"
 	"math/rand"
@@ -14,6 +15,7 @@ import (
 
 var ctx *gin.Context
 var utilityService UtilityService
+var statService StatService
 
 func TestMain(t *testing.M) {
 	globalConfig, err := util.LoadGlobalConfig("../../")
@@ -23,7 +25,15 @@ func TestMain(t *testing.M) {
 
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 	cache := infrastructure.NewCache(globalConfig.RedisUrl)
+	//database and cache
+	conn, err := sql.Open(globalConfig.DBDriver, globalConfig.DBSource)
+	if err != nil {
+		log.Fatal("can't connect to the database", err)
+	}
+	store := infrastructure.NewStore(conn)
+
 	utilityService = NewUtilityService(cache, random)
+	statService = NewStatService(cache, store)
 
 	gin.SetMode(gin.TestMode)
 	ctx, _ = gin.CreateTestContext(httptest.NewRecorder())
