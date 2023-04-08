@@ -21,3 +21,8 @@ FROM url_map;
 -- name: GetUrlMapRedirectionCount :one
 SELECT SUM(time_redirected)
 FROM url_map;
+
+-- name: IncrementUrlMapTimeRedirected :exec
+UPDATE url_map
+SET time_redirected = time_redirected + 1
+WHERE uid = $1;

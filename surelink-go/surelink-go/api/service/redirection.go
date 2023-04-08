@@ -30,22 +30,13 @@ func (s RedirectionService) GetMap(ctx *gin.Context, request structs.GetMapReque
 	url := s.getUrlMapFromRedis(ctx, request.Uid)
 	if len(url) != 0 {
 		response = structs.GetMapResponse{Url: url}
-		return response, nil
+	} else {
+		response, err = s.getMapFromStore(ctx, request)
 	}
 
 	//TODO: Cache non-existent url map lookup
-	urlMap, err := s.store.Queries.GetUrlMap(ctx, request.Uid)
-	if err != nil {
-		log.Println(err)
-		if pqErr, isPqErr := err.(*pq.Error); isPqErr {
-			log.Println(pqErr.Code.Name())
-		}
-		return response, &util.RecordNotFound{}
-	}
+	go s.incrementRedirectionCount(ctx, request.Uid)
 
-	go s.setUrlMapInRedis(ctx, urlMap)
-
-	response = structs.GetMapResponse{Url: urlMap.Url}
 	return response, nil
 }
 
@@ -138,11 +129,36 @@ func (s RedirectionService) getUrlMapFromRedis(ctx *gin.Context, uid string) str
 	return redisValue
 }
 
+func (s RedirectionService) getMapFromStore(ctx *gin.Context, request structs.GetMapRequest) (response structs.GetMapResponse, err error) {
+
+	urlMap, err := s.store.Queries.GetUrlMap(ctx, request.Uid)
+	if err != nil {
+		log.Println(err)
+		if pqErr, isPqErr := err.(*pq.Error); isPqErr {
+			log.Println(pqErr.Code.Name())
+		}
+		return response, &util.RecordNotFound{}
+	}
+
+	go s.setUrlMapInRedis(ctx, urlMap)
+
+	response = structs.GetMapResponse{Url: urlMap.Url}
+	return response, err
+}
+
 func (s RedirectionService) setUrlMapInRedis(ctx *gin.Context, urlMap sqlc.UrlMap) {
 	redisKey := util.RedisRedirectionKeyPrefix + urlMap.Uid
 	redisValue := urlMap.Url
 	err := s.cache.Client.Set(ctx, redisKey, redisValue, util.RedisUrlMapTtl).Err()
 	if err != nil {
 		log.Println(err.Error())
+	}
+}
+
+func (s RedirectionService) incrementRedirectionCount(ctx *gin.Context, uid string) {
+	err := s.store.Queries.IncrementUrlMapTimeRedirected(ctx, uid)
+	if err != nil {
+		log.Printf("failed to incremeent redirection count for %s\n", uid)
+		log.Println(err)
 	}
 }
