@@ -5,11 +5,13 @@
 package sqlc
 
 import (
+	"database/sql"
 	"time"
 )
 
 type UrlMap struct {
-	Uid       string    `json:"uid"`
-	Url       string    `json:"url"`
-	CreatedAt time.Time `json:"created_at"`
+	Uid            string        `json:"uid"`
+	Url            string        `json:"url"`
+	TimeRedirected sql.NullInt64 `json:"time_redirected"`
+	CreatedAt      time.Time     `json:"created_at"`
 }

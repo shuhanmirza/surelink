@@ -18,10 +18,10 @@ func NewCaptchaController(captchaService service.CaptchaService) CaptchaControll
 }
 
 func (c CaptchaController) GetCaptcha(ctx *gin.Context) {
-	getCaptchaResponse, err := c.captchaService.GetNewCaptcha(ctx)
+	response, err := c.captchaService.GetNewCaptcha(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
 		return
 	}
-	ctx.JSON(http.StatusOK, getCaptchaResponse)
+	ctx.JSON(http.StatusOK, response)
 }

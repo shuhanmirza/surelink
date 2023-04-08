@@ -13,3 +13,11 @@ LIMIT 1;
 SELECT count(*)
 FROM url_map
 WHERE uid = $1;
+
+-- name: GetUrlMapCount :one
+SELECT count(*)
+FROM url_map;
+
+-- name: GetUrlMapRedirectionCount :one
+SELECT SUM(time_redirected)
+FROM url_map;

@@ -25,7 +25,7 @@ func (q *Queries) CheckIfUidExistsInUrlMap(ctx context.Context, uid string) (int
 const createUrlMap = `-- name: CreateUrlMap :one
 INSERT INTO url_map (uid, url)
 VALUES ($1, $2)
-RETURNING uid, url, created_at
+RETURNING uid, url, time_redirected, created_at
 `
 
 type CreateUrlMapParams struct {
@@ -36,12 +36,17 @@ type CreateUrlMapParams struct {
 func (q *Queries) CreateUrlMap(ctx context.Context, arg CreateUrlMapParams) (UrlMap, error) {
 	row := q.db.QueryRowContext(ctx, createUrlMap, arg.Uid, arg.Url)
 	var i UrlMap
-	err := row.Scan(&i.Uid, &i.Url, &i.CreatedAt)
+	err := row.Scan(
+		&i.Uid,
+		&i.Url,
+		&i.TimeRedirected,
+		&i.CreatedAt,
+	)
 	return i, err
 }
 
 const getUrlMap = `-- name: GetUrlMap :one
-SELECT uid, url, created_at
+SELECT uid, url, time_redirected, created_at
 from url_map
 WHERE uid = $1
 LIMIT 1
@@ -50,6 +55,35 @@ LIMIT 1
 func (q *Queries) GetUrlMap(ctx context.Context, uid string) (UrlMap, error) {
 	row := q.db.QueryRowContext(ctx, getUrlMap, uid)
 	var i UrlMap
-	err := row.Scan(&i.Uid, &i.Url, &i.CreatedAt)
+	err := row.Scan(
+		&i.Uid,
+		&i.Url,
+		&i.TimeRedirected,
+		&i.CreatedAt,
+	)
 	return i, err
+}
+
+const getUrlMapCount = `-- name: GetUrlMapCount :one
+SELECT count(*)
+FROM url_map
+`
+
+func (q *Queries) GetUrlMapCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUrlMapCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const getUrlMapRedirectionCount = `-- name: GetUrlMapRedirectionCount :one
+SELECT SUM(time_redirected)
+FROM url_map
+`
+
+func (q *Queries) GetUrlMapRedirectionCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUrlMapRedirectionCount)
+	var sum int64
+	err := row.Scan(&sum)
+	return sum, err
 }
