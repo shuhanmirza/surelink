@@ -37,7 +37,7 @@ func (s RedirectionService) GetMap(ctx *gin.Context, request structs.GetMapReque
 	//TODO: Cache non-existent url map lookup
 	go s.incrementRedirectionCount(ctx, request.Uid)
 
-	return response, nil
+	return response, err
 }
 
 func (s RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapRequest) (response structs.SetMapResponse, err error) {
