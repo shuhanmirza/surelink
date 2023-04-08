@@ -4,17 +4,17 @@
       <h2 class="title is-size-1 ">SHORTEN YOUR URLS</h2>
       <h3 class="is-size-5">Streamline your links with ease!</h3>
       <!-- Transforming long, ugly links into Shorten URLs -->
-      <div class="columns is-centered">
-        <div class="column is-3">
-          <p class="is-size-3"><b>SHORTEN</b></p>
-        </div>
-        <div class="column is-3">
-          <p class="is-size-3"><b>BEAUTIFY</b></p>
-        </div>
-        <div class="column is-3">
-          <p class="is-size-3"><b>MEMORIALIZE</b></p>
-        </div>
-      </div>
+<!--      <div class="columns is-centered">-->
+<!--        <div class="column is-3">-->
+<!--          <p class="is-size-3"><b>SHORTEN</b></p>-->
+<!--        </div>-->
+<!--        <div class="column is-3">-->
+<!--          <p class="is-size-3"><b>BEAUTIFY</b></p>-->
+<!--        </div>-->
+<!--        <div class="column is-3">-->
+<!--          <p class="is-size-3"><b>MEMORIALIZE</b></p>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="columns is-centered">
         <div class="card column is-9">
           <div class="card-content">
@@ -33,23 +33,22 @@
                 </div>
               </div>
               <br />
-              <div class="columns">
-                <div class="column is-4">
+              <div class="columns is-centered">
+                <div class="column is-3">
                   <h2 class="is-size-2">
                     <VueJsCounter start="0" end="5231" duration="1500" thousand="," decimal="."></VueJsCounter>
                   </h2>
                   <h4>Total Users</h4>
                 </div>
-                <div class="column is-4">
+                <div class="column is-3">
                   <h2 class="is-size-2">
                     <VueJsCounter start="0" end="6340" duration="1500" thousand="," decimal="."></VueJsCounter>
                   </h2>
                   <h4>Links Generated in Total</h4>
                 </div>
-                <div class="column is-4">
+                <div class="column is-3">
                   <h2 class="is-size-2">
                     <VueJsCounter start="0" end="232" duration="1500" thousand="," decimal="."></VueJsCounter>
-
                   </h2>
                   <h4>Links Generated Per Day</h4>
                 </div>
@@ -84,7 +83,7 @@ h3 {
 }
 
 .card {
-  height: 400px;
+  min-height: 300px;
 }
 
 ul {
