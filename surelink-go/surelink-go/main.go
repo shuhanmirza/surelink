@@ -79,7 +79,7 @@ func main() {
 }
 
 func initialTests() {
-	if _, err := os.Stat(util.FontComicPath); err != nil {
+	if _, err := os.Stat(util.CaptchaFontPath); err != nil {
 		panic(err.Error())
 	}
 }

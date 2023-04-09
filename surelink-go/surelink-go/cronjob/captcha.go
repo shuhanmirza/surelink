@@ -54,13 +54,13 @@ func (cj CaptchaCronJob) generateCaptchaImage() (captchaObj infrastructure.Captc
 
 	captchaGenerator := captcha.New()
 
-	err = captchaGenerator.SetFont(util.FontComicPath)
+	err = captchaGenerator.SetFont(util.CaptchaFontPath)
 	if err != nil {
 		log.Println("error occurred while setting font" + err.Error())
 		return captchaObj, &util.FontNotFound{}
 	}
 	captchaGenerator.SetSize(128, 64)
-	captchaGenerator.SetDisturbance(captcha.MEDIUM)
+	captchaGenerator.SetDisturbance(captcha.NORMAL)
 	captchaGenerator.SetFrontColor(color.RGBA{R: 255, G: 255, B: 255, A: 255}) // white
 	captchaGenerator.SetBkgColor(
 		color.RGBA{R: 255, A: 255}, //red
