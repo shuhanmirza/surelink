@@ -23,14 +23,18 @@
               <div class="field">
                 <div class="control is-medium is-centered columns is-variable is-4">
                   <span class="column is-7">
-                    <input class="input is-medium is-primary" type="text" placeholder="Your Link Here">
+                    <input class="input is-medium is-primary" type="text" placeholder="Your Link Here" v-model="targetLink"/>
                   </span>
                   <span class="column is-2">
-                    <button class="button is-rounded is-medium is-primary">
+                    <button class="button is-rounded is-medium is-primary" @click="verifyCaptcha(captchaValue, targetLink)">
                       Shorten
                     </button>
                   </span>
                 </div>
+              </div>
+              <div v-if="img">
+                  <img :src="'data:image/png;base64,' + img" alt="Base64 Image"/> <br/>
+                  <input class="input is-rounded is-primary is-small captcha-input" type="text" v-model="captchaValue"/> <br/>
               </div>
               <br />
               <div class="columns is-centered">
@@ -57,6 +61,16 @@
           </div>
         </div>
       </div>
+        <div class="columns is-centered" v-if="success">
+            <span class="column is-5">
+                <input class="input is-medium" ref="shortenField" v-model="shortenUrl" type="text" disabled/>
+            </span>
+            <span class="column is-2">
+                <button class="button is-rounded is-medium is-small" @click="copyLink">
+                  Copy
+                </button>
+            </span>
+        </div>
     </div>
   </div>
 </template>
@@ -64,11 +78,62 @@
 <script>
 
 import VueJsCounter from 'vue-js-counter';
+import axios from 'axios';
 
 export default {
   name: "HomeItem",
-  components: { VueJsCounter }
+  components: { VueJsCounter },
+  data() {
+      return {
+          isVerified: false,
+          uuid: null,
+          img: null,
+          captchaValue: '',
+          targetLink: '',
+          shortenUrl: '',
+          success: false
+      };
+  },
+  mounted() {
+      axios.get('https://api.surel.ink/captcha/new')
+          .then(response => {
+              this.uuid = response.data['uuid'];
+              this.img = response.data['img'];
+          })
+          .catch(error => {
+              console.log(error);
+          });
+  },
+  methods: {
+      verifyCaptcha(captcha, link) {
+          const requestBody = {
+              "captcha_uuid": this.uuid,
+              "captcha_value": captcha,
+              "url": link
+          }
+          console.log(requestBody);
+          axios.post('https://api.surel.ink/redirection/set-map', requestBody)
+              .then(response => {
+                  this.shortenUrl = response.data['short_url'];
+                  this.success = true;
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+      },
+      showError(){
+
+      },
+      copyLink(){
+          const inputField = this.$refs.shortenField;
+          inputField.select();
+          document.execCommand("copy");
+          inputField.setSelectionRange(0, 0);
+      }
+  }
 }
+
+
 
 </script>
 
@@ -98,5 +163,9 @@ li {
 
 a {
   color: #42b983;
+}
+.captcha-input {
+  max-width: 13rem;
+  margin: 1rem 0 1rem 0;
 }
 </style>

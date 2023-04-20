@@ -1,6 +1,6 @@
 <template>
     <div>
-        <br></br>
+        <br/>
         <div class="columns is-centered">
             <div class="column is-7">
                 <h1 class="title">What We DO?</h1>
