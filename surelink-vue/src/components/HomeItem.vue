@@ -33,10 +33,8 @@
                 </div>
               </div>
               <div v-if="!isVerified && img && showDiv">
-                  <img :src="'data:image/png;base64,' + img" alt="Base64 Image"/> <br/>
-<!--                  <button class="button"> .-->
-<!--                      <img src="../assets/icons/rotate-right-solid.svg" alt="reload"/>-->
-<!--                  </button>-->
+                  <img :src="'data:image/png;base64,' + img" alt="Base64 Image"/>
+                  <a @click="generateCaptcha"><img class="reload" src="../assets/icons/rotate-right-solid.svg" alt="reload"/></a><br/>
                   <input class="input is-rounded is-primary is-small captcha-input" type="text" v-model="captchaValue" placeholder="Enter Captcha Value"/> <br/>
               </div>
               <div class="columns is-centered" v-if="isVerified && success">
@@ -117,6 +115,14 @@ export default {
               });
       },
       verifyCaptcha(captcha, link) {
+          if(link === '') {
+              this.toastFailure('Insert Your Link!');
+              return;
+          }
+          if(captcha === ''){
+              this.toastFailure('Enter Captcha Value!');
+              return;
+          }
           const requestBody = {
               "captcha_uuid": this.uuid,
               "captcha_value": captcha,
@@ -124,7 +130,8 @@ export default {
           }
           axios.post('https://api.surel.ink/redirection/set-map', requestBody)
               .then(response => {
-                  this.shortenUrl = response.data['short_url'];
+                  // TODO: append link prefix
+                  this.shortenUrl = ''+response.data['short_url'];
                   this.success = true;
                   this.isVerified = true;
                   this.toastSuccess('Link Generated!');
@@ -194,5 +201,10 @@ a {
 .captcha-input {
   max-width: 13rem;
   margin: 1rem 0 1rem 0;
+}
+.reload {
+  width: 20px;
+  height: 20px;
+  margin: 1rem;
 }
 </style>
