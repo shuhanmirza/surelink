@@ -115,8 +115,8 @@ export default {
               });
       },
       verifyCaptcha(captcha, link) {
-          if(link === '') {
-              this.toastFailure('Insert Your Link!');
+          if(link === '' || /^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$/.test(link)===false) {
+              this.toastFailure('Insert a Valid Link!');
               return;
           }
           if(captcha === ''){
