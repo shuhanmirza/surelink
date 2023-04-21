@@ -2,7 +2,7 @@
   <div class="home">
     <div class="background">
       <Navbar />
-      <HomeItem msg="Welcome to Your Vue.js App" />
+      <HomeItem />
       <BodyItem />
       <FooterItem />
     </div>

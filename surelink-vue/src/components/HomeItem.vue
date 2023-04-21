@@ -3,18 +3,6 @@
     <div class="column is-centered is-9">
       <h2 class="title is-size-1 ">SHORTEN YOUR URLS</h2>
       <h3 class="is-size-5">Streamline your links with ease!</h3>
-      <!-- Transforming long, ugly links into Shorten URLs -->
-<!--      <div class="columns is-centered">-->
-<!--        <div class="column is-3">-->
-<!--          <p class="is-size-3"><b>SHORTEN</b></p>-->
-<!--        </div>-->
-<!--        <div class="column is-3">-->
-<!--          <p class="is-size-3"><b>BEAUTIFY</b></p>-->
-<!--        </div>-->
-<!--        <div class="column is-3">-->
-<!--          <p class="is-size-3"><b>MEMORIALIZE</b></p>-->
-<!--        </div>-->
-<!--      </div>-->
       <div class="columns is-centered">
         <div class="card column is-9">
           <div class="card-content">
@@ -111,11 +99,11 @@ export default {
                   this.img = response.data['img'];
               })
               .catch(error => {
-
+                  this.toastFailure('Unable to Generate Captcha!');
               });
       },
       verifyCaptcha(captcha, link) {
-          if(link === '' || /^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$/.test(link)===false) {
+          if(/^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$/.test(link)===false) {
               this.toastFailure('Insert a Valid Link!');
               return;
           }
@@ -130,8 +118,7 @@ export default {
           }
           axios.post('https://api.surel.ink/redirection/set-map', requestBody)
               .then(response => {
-                  // TODO: append link prefix
-                  this.shortenUrl = ''+response.data['short_url'];
+                  this.shortenUrl = 'https://surel.ink/'+response.data['short_url'];
                   this.success = true;
                   this.isVerified = true;
                   this.toastSuccess('Link Generated!');
