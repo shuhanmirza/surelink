@@ -142,14 +142,14 @@ export default {
       },
       toastSuccess(message){
           this.$toast.success(message, {
-              timeout: 2000, // duration of the toast message in milliseconds
-              position: 'bottom-center' // position of the toast message on the screen
+              timeout: 2000,
+              position: 'bottom-center'
           });
       },
       toastFailure(message){
           this.$toast.error(message, {
-              timeout: 2000, // duration of the toast message in milliseconds
-              position: 'bottom-center' // position of the toast message on the screen
+              timeout: 2000,
+              position: 'bottom-center'
           });
       },
       async getStatus(){

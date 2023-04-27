@@ -31,9 +31,7 @@ export default {
             },
         })
             .then(response => {
-                console.log(response);
                 redirectLink = response.data['url'];
-
             })
             .catch(error => {
                 console.log(error.response);
@@ -45,11 +43,11 @@ export default {
             }
             else {
                 this.$toast.error('Incorrect Link, Unable to redirect', {
-                    timeout: 2000, // duration of the toast message in milliseconds
-                    position: 'bottom-center' // position of the toast message on the screen
+                    timeout: 2000,
+                    position: 'bottom-center'
                 });
             }
-        }, 5000);
+        }, 5500);
     }
 };
 </script>
