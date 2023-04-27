@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RedirectView from "@/views/RedirectView.vue";
-import { pathToRegexp } from 'path-to-regexp';
+import ErrorView from "@/views/ErrorView.vue";
 
 Vue.use(VueRouter)
 
@@ -13,9 +13,14 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/:link([a-zA-Z]+)',
+    path: '/:link([A-Za-z0-9=]{6})',
     name: 'redirect',
     component: RedirectView
+  },
+  {
+    path: '*',
+    name: 'error',
+    component: ErrorView
   }
 ]
 
