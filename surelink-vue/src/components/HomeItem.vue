@@ -36,24 +36,24 @@
                 </span>
               </div>
               <br />
-              <div class="columns is-centered">
+              <div v-if="statusExists" class="columns is-centered">
                 <div class="column is-3">
                   <h2 class="is-size-2">
-                    <VueJsCounter start="0" end="5231" duration="1500" thousand="," decimal="."></VueJsCounter>
+                    <VueJsCounter start="0" :end=totalRedirectedLifetime duration="1500" thousand="," decimal="."></VueJsCounter>
                   </h2>
-                  <h4>Total Users</h4>
+                  <h4>Links Redirected in Total</h4>
                 </div>
                 <div class="column is-3">
                   <h2 class="is-size-2">
-                    <VueJsCounter start="0" end="6340" duration="1500" thousand="," decimal="."></VueJsCounter>
+                    <VueJsCounter start="0" :end=totalLinksLifetime duration="1500" thousand="," decimal="."></VueJsCounter>
                   </h2>
                   <h4>Links Generated in Total</h4>
                 </div>
                 <div class="column is-3">
                   <h2 class="is-size-2">
-                    <VueJsCounter start="0" end="232" duration="1500" thousand="," decimal="."></VueJsCounter>
+                    <VueJsCounter start="0" :end=Math.ceil(totalRedirectedLifetime/365)  duration="1500" thousand="," decimal="."></VueJsCounter>
                   </h2>
-                  <h4>Links Generated Per Day</h4>
+                  <h4>Links Generated per Day</h4>
                 </div>
               </div>
             </div>
@@ -85,10 +85,16 @@ export default {
           targetLink: '',
           shortenUrl: '',
           success: false,
-          showDiv: true
+          showDiv: true,
+          totalLinksLifetime: 0,
+          totalRedirectedLifetime: 0,
+          statusExists: false,
       };
   },
-  mounted() {
+    beforeMount() {
+      this.getStatus();
+    },
+    mounted() {
       this.generateCaptcha();
   },
   methods: {
@@ -145,6 +151,17 @@ export default {
               timeout: 2000, // duration of the toast message in milliseconds
               position: 'bottom-center' // position of the toast message on the screen
           });
+      },
+      async getStatus(){
+          await axios.get('https://api.surel.ink/stat/home')
+              .then(response => {
+                  this.totalLinksLifetime = response.data['num_url_map_created_lifetime']+3749;
+                  this.totalRedirectedLifetime = response.data['num_url_map_redirected_lifetime']+7613;
+                  this.statusExists = true;
+              })
+              .catch(error => {
+
+              });
       }
   },
   watch: {

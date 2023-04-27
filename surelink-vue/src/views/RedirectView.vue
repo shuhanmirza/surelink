@@ -24,7 +24,7 @@ export default {
 
         axios.get('https://api.surel.ink/redirection/get-map', {
             params: {
-                uid: link
+                "uid": link
             },
             headers: {
                 'Content-Type': 'application/json'
