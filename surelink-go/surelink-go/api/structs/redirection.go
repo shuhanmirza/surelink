@@ -1,7 +1,7 @@
 package structs
 
 type GetMapRequest struct {
-	Uid string `json:"uid" binding:"required"`
+	Uid string `form:"uid" json:"uid" binding:"required"`
 }
 
 type GetMapResponse struct {
