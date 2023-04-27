@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <br/>
         <div class="columns is-centered">
             <div class="column is-7">
@@ -43,22 +43,32 @@ export default {
     name: 'BodyItem'
 }
 </script>
+
 <style scoped lang="scss">
 .image-text {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 20px;
-  margin: 0 auto;
-  align-items: center;
+  margin-top: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    grid-gap: 30px;
+  }
 }
 
 .grid-item {
   padding: 20px;
   text-align: center;
 }
+
 </style>
