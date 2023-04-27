@@ -26,8 +26,6 @@
 
 <script>
 const FULL_DASH_ARRAY = 283;
-const WARNING_THRESHOLD = 10;
-const ALERT_THRESHOLD = 5;
 
 const COLOR_CODES = {
     info: {
