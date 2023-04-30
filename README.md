@@ -1,4 +1,4 @@
-**![go-test-badge](https://github.com/shuhanmirza/surelink/actions/workflows/go-test.yml/badge.svg)** <img src="https://img.shields.io/github/contributors/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/forks/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/issues/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/stars/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/v/release/shuhanmirza/surelink?style=flat"> <img src="https://img.shields.io/badge/open source-808080?style=flat">
+<img src="https://img.shields.io/github/contributors/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/forks/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/issues/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/stars/shuhanmirza/surelink.svg?style=flat"> <img src="https://img.shields.io/github/v/release/shuhanmirza/surelink?style=flat"> <img src="https://img.shields.io/badge/open source-808080?style=flat">
 
 
 
