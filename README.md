@@ -22,5 +22,4 @@ So why take chances with your safety and the safety of your audience? Choose sur
 
 
 ## Contributors
-<a href="https://github.com/sustcast/sustcast-android-app-v1/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=shuhanmirza/surelink" />
+<a href="https://github.com/shuhanmirza/surelink/graphs/contributors"> <img src="https://contributors-img.web.app/image?repo=shuhanmirza/surelink"> </a>
