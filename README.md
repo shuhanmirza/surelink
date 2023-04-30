@@ -4,7 +4,7 @@
 
 # surelink
 
-### Safe short url for humans. 
+### Safe short url for humans
 Do you ever find yourself hesitant to click on a short URL because you have no idea where it might lead you? You're not alone! Many of us are wary of clicking on links without knowing where they will take us.
 
 That's why we created `surelink` – the URL shortener that puts your safety first! With surelink, you'll always know exactly where a short URL will take you before you click on it. This means you can make informed decisions about whether or not to follow the link.
