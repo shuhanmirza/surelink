@@ -25,7 +25,7 @@ func NewUtilityService(cache *infrastructure.Cache, random *rand.Rand) UtilitySe
 	}
 }
 
-func (s UtilityService) IsValidHttpsUrl(ctx *gin.Context, urlString string) (bool, error) {
+func (s *UtilityService) IsValidHttpsUrl(ctx *gin.Context, urlString string) (bool, error) {
 	urlObj, err := url.ParseRequestURI(urlString)
 	if err != nil {
 		log.Println("error while url parsing")
@@ -71,18 +71,18 @@ func (s UtilityService) IsValidHttpsUrl(ctx *gin.Context, urlString string) (boo
 	return true, nil
 }
 
-func (s UtilityService) RandomInt(min, max int64) int64 {
+func (s *UtilityService) RandomInt(min, max int64) int64 {
 	return min + s.random.Int63n(max-min+1)
 }
 
-func (s UtilityService) RandomBool() bool {
+func (s *UtilityService) RandomBool() bool {
 	if s.random.Intn(2) == 0 {
 		return false
 	}
 	return true
 }
 
-func (s UtilityService) RandomStringAlphabet(n int) string {
+func (s *UtilityService) RandomStringAlphabet(n int) string {
 	var stringBuilder strings.Builder
 
 	lenAlpha := len(alphabet)

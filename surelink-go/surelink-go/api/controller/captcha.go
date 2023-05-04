@@ -17,7 +17,7 @@ func NewCaptchaController(captchaService service.CaptchaService) CaptchaControll
 	}
 }
 
-func (c CaptchaController) GetCaptcha(ctx *gin.Context) {
+func (c *CaptchaController) GetCaptcha(ctx *gin.Context) {
 	response, err := c.captchaService.GetNewCaptcha(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))

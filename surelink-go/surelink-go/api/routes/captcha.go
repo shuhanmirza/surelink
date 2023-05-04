@@ -17,7 +17,7 @@ func NewCaptchaRoute(captchaController controller.CaptchaController, router infr
 	}
 }
 
-func (r CaptchaRoute) Setup() {
+func (r *CaptchaRoute) Setup() {
 	configuration := r.Handler.Gin.Group("captcha")
 	{
 		configuration.GET("/new", r.Controller.GetCaptcha)

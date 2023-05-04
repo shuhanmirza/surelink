@@ -17,7 +17,7 @@ func NewStatRoute(statController controller.StatController, router infrastructur
 	}
 }
 
-func (r StatRoute) Setup() {
+func (r *StatRoute) Setup() {
 	configuration := r.Handler.Gin.Group("stat")
 	{
 		configuration.GET("home", r.Controller.GetHomeStat)

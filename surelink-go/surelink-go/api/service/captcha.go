@@ -20,7 +20,7 @@ func NewCaptchaService(cache *infrastructure.Cache) CaptchaService {
 	}
 }
 
-func (s CaptchaService) GetNewCaptcha(ctx *gin.Context) (response structs.GetCaptchaResponse, err error) {
+func (s *CaptchaService) GetNewCaptcha(ctx *gin.Context) (response structs.GetCaptchaResponse, err error) {
 	captchaObj, err := s.getCaptchaFromQueue(ctx)
 	if err != nil {
 		log.Println("error while generating captcha")
@@ -37,7 +37,7 @@ func (s CaptchaService) GetNewCaptcha(ctx *gin.Context) (response structs.GetCap
 	return response, nil
 }
 
-func (s CaptchaService) getCaptchaFromQueue(ctx *gin.Context) (captchaObj infrastructure.CaptchaModel, err error) {
+func (s *CaptchaService) getCaptchaFromQueue(ctx *gin.Context) (captchaObj infrastructure.CaptchaModel, err error) {
 	captchaObjJson, err := s.cache.Client.RPop(ctx, util.RedisCaptchaQueueKey).Result()
 	if err != nil {
 		log.Println("could not get captcha from the queue")
@@ -55,7 +55,7 @@ func (s CaptchaService) getCaptchaFromQueue(ctx *gin.Context) (captchaObj infras
 	return captchaObj, nil
 }
 
-func (s CaptchaService) SaveNewCaptcha(ctx *gin.Context, captchaUuid string, captchaStr string) {
+func (s *CaptchaService) SaveNewCaptcha(ctx *gin.Context, captchaUuid string, captchaStr string) {
 	redisKey := util.RedisCaptchaKeyPrefix + captchaUuid
 	redisValue := captchaStr
 	err := s.cache.Client.Set(ctx, redisKey, redisValue, util.RedisCaptchaTtl).Err()

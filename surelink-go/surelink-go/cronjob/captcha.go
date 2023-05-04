@@ -21,7 +21,7 @@ func NewCaptchaCronJob(cache *infrastructure.Cache) CaptchaCronJob {
 	return CaptchaCronJob{cache: cache}
 }
 
-func (cj CaptchaCronJob) Run(ctx context.Context) {
+func (cj *CaptchaCronJob) Run(ctx context.Context) {
 	captchaQueueSize, err := cj.cache.Client.LLen(ctx, util.RedisCaptchaQueueKey).Result()
 	if err != nil {
 		log.Println("cronjob: error while checking queue size in captcha queue")
@@ -50,7 +50,7 @@ func (cj CaptchaCronJob) Run(ctx context.Context) {
 
 }
 
-func (cj CaptchaCronJob) generateCaptchaImage() (captchaObj infrastructure.CaptchaModel, err error) {
+func (cj *CaptchaCronJob) generateCaptchaImage() (captchaObj infrastructure.CaptchaModel, err error) {
 
 	captchaGenerator := captcha.New()
 

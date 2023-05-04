@@ -40,7 +40,7 @@ func (s RedirectionService) GetMap(ctx *gin.Context, request structs.GetMapReque
 	return response, err
 }
 
-func (s RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapRequest) (response structs.SetMapResponse, err error) {
+func (s *RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapRequest) (response structs.SetMapResponse, err error) {
 	if !s.validateCaptchaFromRedis(ctx, request.CaptchaUuid, request.CaptchaValue) {
 		log.Println("captcha validation failed")
 		return response, &util.CaptchaValidationFailed{}
@@ -77,7 +77,7 @@ func (s RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapReque
 	return response, nil
 }
 
-func (s RedirectionService) generateShortUrlUid(ctx *gin.Context) (uidString string, err error) {
+func (s *RedirectionService) generateShortUrlUid(ctx *gin.Context) (uidString string, err error) {
 	uidString = s.utilityService.RandomStringAlphabet(util.ShortUrlUidLength)
 
 	count, err := s.store.Queries.CheckIfUidExistsInUrlMap(ctx, uidString)
@@ -96,7 +96,7 @@ func (s RedirectionService) generateShortUrlUid(ctx *gin.Context) (uidString str
 	return uidString, nil
 }
 
-func (s RedirectionService) validateCaptchaFromRedis(ctx *gin.Context, captchaUuid string, captchaValue string) bool {
+func (s *RedirectionService) validateCaptchaFromRedis(ctx *gin.Context, captchaUuid string, captchaValue string) bool {
 	redisKey := util.RedisCaptchaKeyPrefix + captchaUuid
 	redisValue, err := s.cache.Client.Get(ctx, redisKey).Result()
 
@@ -114,7 +114,7 @@ func (s RedirectionService) validateCaptchaFromRedis(ctx *gin.Context, captchaUu
 	return true
 }
 
-func (s RedirectionService) getUrlMapFromRedis(ctx *gin.Context, uid string) string {
+func (s *RedirectionService) getUrlMapFromRedis(ctx *gin.Context, uid string) string {
 	redisKey := util.RedisRedirectionKeyPrefix + uid
 	redisValue, err := s.cache.Client.Get(ctx, redisKey).Result()
 
@@ -129,7 +129,7 @@ func (s RedirectionService) getUrlMapFromRedis(ctx *gin.Context, uid string) str
 	return redisValue
 }
 
-func (s RedirectionService) getMapFromStore(ctx *gin.Context, request structs.GetMapRequest) (response structs.GetMapResponse, err error) {
+func (s *RedirectionService) getMapFromStore(ctx *gin.Context, request structs.GetMapRequest) (response structs.GetMapResponse, err error) {
 
 	urlMap, err := s.store.Queries.GetUrlMap(ctx, request.Uid)
 	if err != nil {
@@ -146,7 +146,7 @@ func (s RedirectionService) getMapFromStore(ctx *gin.Context, request structs.Ge
 	return response, err
 }
 
-func (s RedirectionService) setUrlMapInRedis(ctx *gin.Context, urlMap sqlc.UrlMap) {
+func (s *RedirectionService) setUrlMapInRedis(ctx *gin.Context, urlMap sqlc.UrlMap) {
 	redisKey := util.RedisRedirectionKeyPrefix + urlMap.Uid
 	redisValue := urlMap.Url
 	err := s.cache.Client.Set(ctx, redisKey, redisValue, util.RedisUrlMapTtl).Err()
@@ -155,7 +155,7 @@ func (s RedirectionService) setUrlMapInRedis(ctx *gin.Context, urlMap sqlc.UrlMa
 	}
 }
 
-func (s RedirectionService) incrementRedirectionCount(ctx *gin.Context, uid string) {
+func (s *RedirectionService) incrementRedirectionCount(ctx *gin.Context, uid string) {
 	err := s.store.Queries.IncrementUrlMapTimeRedirected(ctx, uid)
 	if err != nil {
 		log.Printf("failed to incremeent redirection count for %s\n", uid)
