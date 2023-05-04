@@ -18,16 +18,18 @@
                     </div>
                     <div class="card-content">
                         <div v-if="!isLoading">
-                            <div class="columns is-flex-mobile">
+                            <div v-if="icon" class="columns is-flex-mobile">
                                 <div class="column is-left is-2 is-2-mobile">
-                                    <img v-if="icon" :src="icon" class="icon margin" alt="">
+                                    <img :src="icon" class="icon margin" alt="">
                                 </div>
                                 <div class="column is-11 is-flex is-align-items-center is-justify-content-start">
                                     <h3 class="title is-5">{{ title }}</h3>
                                 </div>
                             </div>
-
-                            <div class="content has-text-justified">
+                            <div v-else>
+                                <h3 class="title is-5">{{ title }}</h3>
+                            </div>
+                            <div v-if="description" class="content has-text-justified">
                                 {{ description }}
                                 <br>
                             </div>
@@ -50,8 +52,13 @@
 
 <script>
 
+import Vue from "vue";
 import axios from "axios";
 import Loader from "@/components/Loader.vue";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+Vue.use(Toast);
 export default {
     name: "PreveiwRedirection",
     components: {Loader},
@@ -98,7 +105,7 @@ export default {
                     // this.demoPreview();
                 })
                 .catch(error => {
-                    console.log(error.response);
+                    this.toastFailure("Incorrect Short Link!")
                 });
         },
         generatePreview(){
@@ -117,6 +124,12 @@ export default {
         },
         redirectToLink(){
             window.location.href = this.redirectLink;
+        },
+        toastFailure(message){
+            this.$toast.error(message, {
+                timeout: 2000,
+                position: 'bottom-center'
+            });
         },
         //TODO: used for testing only
         demoPreview(){
