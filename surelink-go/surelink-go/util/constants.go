@@ -7,6 +7,7 @@ const RedisCaptchaKeyPrefix = "CACHE_CAPTCHA_"
 const RedisCaptchaQueueKey = "CACHE_QUEUE_CAPTCHA"
 const RedisValidHostUrlPrefix = "CACHE_VALID_HOST_URL_"
 const RedisServiceStatKey = "CACHE_SERVICE_STAT"
+const RedisLinkPreviewPrefix = "CACHE_LINK_PREVIEW_"
 const CaptchaTextLength = 6
 const ShortUrlUidLength = 6
 const CaptchaQueueMaxSize = 60
