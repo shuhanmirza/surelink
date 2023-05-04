@@ -76,7 +76,6 @@ export default {
         }
     } ,
     mounted() {
-        this.isLoading = true;
         this.fetchOriginalLink();
         setTimeout(()=>{
             if(this.title !== ''){
