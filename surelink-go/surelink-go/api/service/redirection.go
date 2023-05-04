@@ -26,7 +26,7 @@ func NewRedirectionService(store *infrastructure.Store, cache *infrastructure.Ca
 	}
 }
 
-func (s RedirectionService) GetMap(ctx *gin.Context, request structs.GetMapRequest) (response structs.GetMapResponse, err error) {
+func (s *RedirectionService) GetMap(ctx *gin.Context, request structs.GetMapRequest) (response structs.GetMapResponse, err error) {
 	url := s.getUrlMapFromRedis(ctx, request.Uid)
 	if len(url) != 0 {
 		response = structs.GetMapResponse{Url: url}
