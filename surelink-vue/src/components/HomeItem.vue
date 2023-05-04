@@ -14,7 +14,7 @@
                     <input class="input is-medium is-primary" type="text" placeholder="Your Link Here" v-model="targetLink"/>
                   </span>
                   <span class="column is-2">
-                    <button class="button is-rounded is-medium is-primary" @click="verifyCaptcha(captchaValue, targetLink)">
+                    <button class="button is-medium is-primary" @click="verifyCaptcha(captchaValue, targetLink)">
                       Shorten
                     </button>
                   </span>
@@ -23,14 +23,14 @@
               <div v-if="!isVerified && img && showDiv">
                   <img :src="'data:image/png;base64,' + img" alt="Base64 Image"/>
                   <a @click="generateCaptcha"><img class="reload" src="../assets/icons/rotate-right-solid.svg" alt="reload"/></a><br/>
-                  <input class="input is-rounded is-primary is-small captcha-input" type="text" v-model="captchaValue" placeholder="Enter Captcha Value"/> <br/>
+                  <input class="input is-primary is-small captcha-input" type="text" v-model="captchaValue" placeholder="Enter Captcha Value"/> <br/>
               </div>
               <div class="columns is-centered" v-if="isVerified && success">
                 <span class="column is-5">
                     <input class="input is-medium" ref="shortenField" v-model="shortenUrl" type="text"/>
                 </span>
                 <span class="column is-2">
-                  <button class="button is-rounded is-medium is-small" @click="copyLink">
+                  <button class="button is-medium is-small" @click="copyLink">
                     Copy
                   </button>
                 </span>

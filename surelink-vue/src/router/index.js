@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import RedirectView from "@/views/RedirectView.vue";
 import ErrorView from "@/views/ErrorView.vue";
+import RedirectWithoutWait from "@/views/RedirectWithoutWait.vue";
 
 Vue.use(VueRouter)
 
@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/:link([A-Za-z0-9=]{6})',
     name: 'redirect',
-    component: RedirectView
+    component: RedirectWithoutWait
   },
   {
     path: '*',
