@@ -66,7 +66,7 @@ func main() {
 	statRoute := routes.NewStatRoute(statController, ginRouter)
 	statRoute.Setup()
 
-	go startCronJobs(cronScheduler, cache)
+	go startCronJobs(cronScheduler, cache, utilityService)
 	go onStartupTasks()
 
 	//server
@@ -79,19 +79,22 @@ func main() {
 }
 
 func initialTests() {
-	if _, err := os.Stat(util.CaptchaFontPath); err != nil {
-		panic(err.Error())
+	for _, fontPath := range util.CaptchaFontPathList {
+		if _, err := os.Stat(fontPath); err != nil {
+			panic(err.Error())
+		}
 	}
+
 }
 
 func onStartupTasks() {
 
 }
 
-func startCronJobs(cronScheduler *cron.Cron, cache *infrastructure.Cache) {
+func startCronJobs(cronScheduler *cron.Cron, cache *infrastructure.Cache, utilityService service.UtilityService) {
 	cronJobCtx := context.Background()
 
-	captchaCronJob := cronjob.NewCaptchaCronJob(cache)
+	captchaCronJob := cronjob.NewCaptchaCronJob(cache, utilityService)
 	_, errCron := cronScheduler.AddFunc(util.CronSpecEveryOneMin, func() {
 		captchaCronJob.Run(cronJobCtx)
 	})

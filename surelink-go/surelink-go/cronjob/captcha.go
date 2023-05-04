@@ -9,16 +9,21 @@ import (
 	"image/color"
 	"image/png"
 	"log"
+	"surelink-go/api/service"
 	"surelink-go/infrastructure"
 	"surelink-go/util"
 )
 
 type CaptchaCronJob struct {
-	cache *infrastructure.Cache
+	cache          *infrastructure.Cache
+	utilityService service.UtilityService
 }
 
-func NewCaptchaCronJob(cache *infrastructure.Cache) CaptchaCronJob {
-	return CaptchaCronJob{cache: cache}
+func NewCaptchaCronJob(cache *infrastructure.Cache, utilityService service.UtilityService) CaptchaCronJob {
+	return CaptchaCronJob{
+		cache:          cache,
+		utilityService: utilityService,
+	}
 }
 
 func (cj *CaptchaCronJob) Run(ctx context.Context) {
@@ -54,7 +59,8 @@ func (cj *CaptchaCronJob) generateCaptchaImage() (captchaObj infrastructure.Capt
 
 	captchaGenerator := captcha.New()
 
-	err = captchaGenerator.SetFont(util.CaptchaFontPath)
+	pathIndex := cj.utilityService.RandomInt(0, int64(len(util.CaptchaFontPathList)-1))
+	err = captchaGenerator.SetFont(util.CaptchaFontPathList[pathIndex])
 	if err != nil {
 		log.Println("error occurred while setting font" + err.Error())
 		return captchaObj, &util.FontNotFound{}
