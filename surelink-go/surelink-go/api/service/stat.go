@@ -23,7 +23,7 @@ func NewStatService(cache *infrastructure.Cache, store *infrastructure.Store) St
 	}
 }
 
-func (s StatService) GetHomePageStats(ctx *gin.Context) (response structs.GetHomePageStatsResponse, err error) {
+func (s *StatService) GetHomePageStats(ctx *gin.Context) (response structs.GetHomePageStatsResponse, err error) {
 	var redisModel infrastructure.HomePageStatModel
 
 	redisModelStr, err := s.cache.Client.Get(ctx, util.RedisServiceStatKey).Result()
@@ -49,7 +49,7 @@ func (s StatService) GetHomePageStats(ctx *gin.Context) (response structs.GetHom
 	return response, nil
 }
 
-func (s StatService) getHomePageStatFromStore(ctx *gin.Context) (response structs.GetHomePageStatsResponse, err error) {
+func (s *StatService) getHomePageStatFromStore(ctx *gin.Context) (response structs.GetHomePageStatsResponse, err error) {
 	numUrlMap, err := s.store.Queries.GetUrlMapCount(ctx)
 	if err != nil {
 		log.Println(err)
@@ -75,7 +75,7 @@ func (s StatService) getHomePageStatFromStore(ctx *gin.Context) (response struct
 
 	return response, nil
 }
-func (s StatService) saveHomePageStatInCache(ctx *gin.Context, response structs.GetHomePageStatsResponse) {
+func (s *StatService) saveHomePageStatInCache(ctx *gin.Context, response structs.GetHomePageStatsResponse) {
 	redisModel := infrastructure.HomePageStatModel{
 		NumUrlMapRedirectedLifetime: response.NumUrlMapRedirectedLifetime,
 		NumUrlMapCreatedLifetime:    response.NumUrlMapCreatedLifetime}

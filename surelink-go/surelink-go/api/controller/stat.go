@@ -17,7 +17,7 @@ func NewStatController(statService service.StatService) StatController {
 	}
 }
 
-func (c StatController) GetHomeStat(ctx *gin.Context)  {
+func (c *StatController) GetHomeStat(ctx *gin.Context) {
 	response, err := c.statService.GetHomePageStats(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
