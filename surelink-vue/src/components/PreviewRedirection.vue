@@ -13,14 +13,14 @@
                 <div class="card">
                     <div v-if="!isLoading">
                         <div class="card-image">
-                            <img :src="image" class="is-64x64" alt="">
+                            <img v-if="image" :src="image" class="is-64x64" alt="">
                         </div>
                     </div>
                     <div class="card-content">
                         <div v-if="!isLoading">
                             <div class="columns is-flex-mobile">
                                 <div class="column is-left is-2 is-2-mobile">
-                                    <img :src="icon" class="icon margin" alt="">
+                                    <img v-if="icon" :src="icon" class="icon margin" alt="">
                                 </div>
                                 <div class="column is-11 is-flex is-align-items-center is-justify-content-start">
                                     <h3 class="title is-5">{{ title }}</h3>
