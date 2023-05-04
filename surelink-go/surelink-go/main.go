@@ -66,6 +66,12 @@ func main() {
 	statRoute := routes.NewStatRoute(statController, ginRouter)
 	statRoute.Setup()
 
+	// link-preview
+	linkPreviewService := service.NewLinkPreviewService(cache)
+	linkPreviewController := controller.NewLinkPreviewController(linkPreviewService)
+	linkPreviewRoute := routes.NewLinkPreviewRoute(linkPreviewController, ginRouter)
+	linkPreviewRoute.Setup()
+
 	go startCronJobs(cronScheduler, cache, utilityService)
 	go onStartupTasks()
 
