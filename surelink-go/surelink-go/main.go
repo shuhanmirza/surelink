@@ -26,6 +26,11 @@ func main() {
 		log.Fatal("can not load global config", err)
 	}
 
+	secretConfig, err := util.LoadSecretConfig(".")
+	if err != nil {
+		log.Fatal("can not load secret config", err)
+	}
+
 	//miscellaneous
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
 	cronScheduler := cron.New()
@@ -67,7 +72,7 @@ func main() {
 	statRoute.Setup()
 
 	// link-preview
-	linkPreviewService := service.NewLinkPreviewService(cache)
+	linkPreviewService := service.NewLinkPreviewService(cache, redirectionService, secretConfig)
 	linkPreviewController := controller.NewLinkPreviewController(linkPreviewService)
 	linkPreviewRoute := routes.NewLinkPreviewRoute(linkPreviewController, ginRouter)
 	linkPreviewRoute.Setup()

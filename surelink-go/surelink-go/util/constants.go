@@ -18,5 +18,6 @@ var RedisCaptchaTtl, _ = time.ParseDuration("5m")
 var RedisUrlHostValidityTtl, _ = time.ParseDuration("120h")
 var RedisUrlMapTtl, _ = time.ParseDuration("5m")
 var RedisServiceStatTtl, _ = time.ParseDuration("1m")
+var RedisLinkPreviewTtl, _ = time.ParseDuration("24h")
 
 const CronSpecEveryOneMin = "* * * * *"
