@@ -40,7 +40,7 @@
                         </div>
                         <div v-if="loadingFail">
                             <img class="sad" src="../assets/images/sad.svg" alt="reload"/>
-                            <h3 class="margin">{{message}}</h3>
+                            <h3 class="margin">{{ message }}</h3>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@ Vue.use(Toast);
 export default {
     name: "PreveiwRedirection",
     components: {Loader},
-    data(){
+    data() {
         return {
             redirectLink: '',
             title: '',
@@ -74,21 +74,20 @@ export default {
             message: '',
             loadingFail: false
         }
-    } ,
+    },
     mounted() {
         this.fetchOriginalLink();
-        setTimeout(()=>{
-            if(this.title !== ''){
+        setTimeout(() => {
+            if (this.title !== '') {
                 this.isLoading = false;
-            }
-            else {
+            } else {
                 this.message = 'Could not load preview';
                 this.loadingFail = true;
             }
-        },2000)
+        }, 2000)
     },
     methods: {
-        fetchOriginalLink(){
+        fetchOriginalLink() {
             const link = this.$route.params.link;
             axios.get('https://api.surel.ink/redirection/get-map', {
                 params: {
@@ -100,42 +99,40 @@ export default {
             })
                 .then(response => {
                     this.redirectLink = response.data['url'];
-                    this.generatePreview();
-                    // this.demoPreview();
+                    this.generatePreview(link);
                 })
                 .catch(error => {
                     this.toastFailure("Incorrect Short Link!")
                 });
         },
-        generatePreview(){
-            axios.post(
-                'https://api.peekalink.io/',
-                { link: this.redirectLink },
-                { headers: { 'X-API-Key': process.env.VUE_APP_PREVIEW_API } }
-            ).then(response => {
-                this.title = response.data['title'];
-                this.description = response.data['description'];
-                this.image = response.data['image'].url;
-                this.icon = response.data['icon'].url;
-            }).catch(error => {
-                console.error(error);
-            });
+        generatePreview(url) {
+            axios.get('https://api.surel.ink/link-preview/', {
+                params: {
+                    "uid": url
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    this.title = response.data['title'];
+                    this.description = response.data['description'];
+                    this.image = response.data['image'];
+                    this.icon = this.image;
+                })
+                .catch(error => {
+                    console.log("Could not load preview");
+                })
+
         },
-        redirectToLink(){
+        redirectToLink() {
             window.location.href = this.redirectLink;
         },
-        toastFailure(message){
+        toastFailure(message) {
             this.$toast.error(message, {
                 timeout: 2000,
                 position: 'bottom-center'
             });
-        },
-        //TODO: used for testing only
-        demoPreview(){
-            this.title = 'Github';
-            this.description = 'Lorem Ipsum Lorent'
-            this.image = 'https://cdn.peekalink.io/public/images/5cfe8a0d-1844-49f2-8e79-8c77bc62e4ec/b00639ed-1948-4c2d-9eb1-0b784876ea05.jpg';
-            this.icon = 'https://cdn.peekalink.io/public/images/fa594927-5453-4c4d-9ac6-1fc59f3c6704/7effbc39-74ca-4ad9-bb27-989cba6856d0.jpg';
         }
     }
 }
@@ -145,21 +142,26 @@ export default {
 .container {
     margin: 1rem;
 }
+
 .back {
     width: 20px;
     height: 20px;
 }
+
 .card {
     padding: 2rem;
     margin: 1rem;
 }
+
 .margin {
     margin: 1rem;
 }
+
 .sad {
     width: 250px;
     height: 250px;
 }
+
 .icon {
     width: 2rem;
     height: 2rem;
