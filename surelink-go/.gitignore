@@ -1,3 +1,4 @@
+secret.env
 vendor
 .idea
 # surelink-go/app.env

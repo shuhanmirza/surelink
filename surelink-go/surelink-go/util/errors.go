@@ -3,53 +3,59 @@ package util
 type RecordNotFound struct{}
 
 func (m *RecordNotFound) Error() string {
-	return "record not found"
+	return "RECORD_NOT_FOUND"
 }
 
 type FontNotFound struct{}
 
 func (m *FontNotFound) Error() string {
-	return "font not found"
+	return "FONT_NOT_FOUND"
 }
 
 type ImgEncodingFailed struct{}
 
 func (m *ImgEncodingFailed) Error() string {
-	return "image encoding failed"
+	return "IMAGE_ENCODING_FAILED"
 }
 
 type CaptchaGenerationFailed struct{}
 
 func (m *CaptchaGenerationFailed) Error() string {
-	return "captcha generation failed"
+	return "CAPTCHA_GENERATION_FAILED"
 }
 
 type CaptchaValidationFailed struct{}
 
 func (m *CaptchaValidationFailed) Error() string {
-	return "captcha validation failed"
+	return "CAPTCHA_VALIDATION_FAILED"
 }
 
 type UnprecedentedDbError struct{}
 
 func (m *UnprecedentedDbError) Error() string {
-	return "unprecedented db error"
+	return "UNPRECEDENTED_DB_ERROR"
 }
 
 type UrlProtocolNotAcceptedError struct{}
 
 func (m *UrlProtocolNotAcceptedError) Error() string {
-	return "invalid url protocol"
+	return "INVALID_PROTOCOL"
 }
 
 type UrlHostInvalidError struct{}
 
 func (m *UrlHostInvalidError) Error() string {
-	return "invalid url host"
+	return "INVALID_HOST"
 }
 
 type UrlParsingError struct{}
 
 func (m *UrlParsingError) Error() string {
-	return "invalid url"
+	return "INVALID_URL"
+}
+
+type LinkPreviewNotFoundError struct{}
+
+func (m *LinkPreviewNotFoundError) Error() string {
+	return "LINK_PREVIEW_NOT_FOUND"
 }
