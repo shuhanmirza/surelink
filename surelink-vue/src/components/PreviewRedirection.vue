@@ -18,16 +18,8 @@
                     </div>
                     <div class="card-content">
                         <div v-if="!isLoading">
-                            <div v-if="icon" class="columns is-flex-mobile">
-                                <div class="column is-left is-2 is-2-mobile">
-                                    <img :src="icon" class="icon margin" alt="">
-                                </div>
-                                <div class="column is-11 is-flex is-align-items-center is-justify-content-start">
-                                    <h3 class="title is-5">{{ title }}</h3>
-                                </div>
-                            </div>
-                            <div v-else>
-                                <h3 class="title is-5">{{ title }}</h3>
+                            <div v-if="title" class="is-align-items-flex-start is-justify-content-start">
+                                <h3 class="title is-5 align-title">{{ title }}</h3>
                             </div>
                             <div v-if="description" class="content has-text-justified">
                                 {{ description }}
@@ -69,7 +61,6 @@ export default {
             description: '',
             image: '',
             url: '',
-            icon: '',
             isLoading: true,
             message: '',
             loadingFail: false
@@ -118,7 +109,6 @@ export default {
                     this.title = response.data['title'];
                     this.description = response.data['description'];
                     this.image = response.data['image'];
-                    this.icon = this.image;
                 })
                 .catch(error => {
                     console.log("Could not load preview");
@@ -162,8 +152,7 @@ export default {
     height: 250px;
 }
 
-.icon {
-    width: 2rem;
-    height: 2rem;
+.align-title {
+    text-align: left;
 }
 </style>
