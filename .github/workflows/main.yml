@@ -1,7 +1,16 @@
-steps:
-  - name: Install SSH Key
-    uses: shimataro/ssh-key-action@v2
-    with:
-      key: {%- raw -%} ${{ secrets.SSH_PRIVATE_KEY }}
-      known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
-    
+name: remote ssh command
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY}}
+        port: ${{ secrets.SSH_PORT }}
+        script: whoami
