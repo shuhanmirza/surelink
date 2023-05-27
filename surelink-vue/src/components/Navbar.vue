@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-transparent m-5" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a href="/">
                 <img src="../../src/assets/images/logo.svg" width="32" height="32"> SureLink
