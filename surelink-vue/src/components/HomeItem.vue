@@ -122,12 +122,13 @@ export default {
             this.shortenUrl = 'https://surel.ink/' + response.data['short_url'];
             this.success = true;
             this.isVerified = true;
+            this.targetLink = '';
             this.toastSuccess('Link Generated!');
           })
           .catch(error => {
-            //TODO: provide error message from API
             console.log(error.response);
-            this.toastFailure(error.response.data);
+            let errorMsg = error.response.data.hasOwnProperty("error") ? error.response.data.error : "An error occurred! Please try again."
+            this.toastFailure(errorMsg);
           });
     },
     copyLink() {

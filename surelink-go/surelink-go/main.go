@@ -60,7 +60,7 @@ func main() {
 	captchaRoute.Setup()
 
 	//redirection
-	redirectionService := service.NewRedirectionService(store, cache, &utilityService)
+	redirectionService := service.NewRedirectionService(store, cache, &utilityService, secretConfig)
 	redirectionController := controller.NewRedirectionController(redirectionService)
 	redirectionRoute := routes.NewRedirectionRoute(redirectionController, ginRouter)
 	redirectionRoute.Setup()
