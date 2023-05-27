@@ -2,7 +2,7 @@
     <section class="section">
         <div class="container">
             <div class="columns is-centered">
-                <div class="column custom-card">
+                <div class="column custom-card is-12-mobile">
                     <div class="card shadow-lg is-cursor-pointer has-text-centered">
                         <div v-if="isLoading && !loadingFail">
                             <br/>
