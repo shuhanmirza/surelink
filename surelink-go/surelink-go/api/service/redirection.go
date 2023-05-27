@@ -1,6 +1,8 @@
 package service
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/lib/pq"
@@ -16,13 +18,17 @@ type RedirectionService struct {
 	store          *infrastructure.Store
 	cache          *infrastructure.Cache
 	utilityService *UtilityService
+	secretConfig   util.SecretConfig
+	httpClient     http.Client
 }
 
-func NewRedirectionService(store *infrastructure.Store, cache *infrastructure.Cache, utilityService *UtilityService) RedirectionService {
+func NewRedirectionService(store *infrastructure.Store, cache *infrastructure.Cache, utilityService *UtilityService, secretConfig util.SecretConfig) RedirectionService {
 	return RedirectionService{
 		store:          store,
 		cache:          cache,
 		utilityService: utilityService,
+		secretConfig:   secretConfig,
+		httpClient:     http.Client{},
 	}
 }
 
@@ -50,6 +56,11 @@ func (s *RedirectionService) SetMapV1(ctx *gin.Context, request structs.SetMapRe
 }
 
 func (s *RedirectionService) SetMapV2(ctx *gin.Context, request structs.SetMapRequestV2) (response structs.SetMapResponse, err error) {
+
+	if !s.validateRecaptcha(s.secretConfig.RecaptchaSecretKey, request.RecaptchaToken) {
+		log.Println("captcha validation failed")
+		return response, &util.CaptchaValidationFailed{}
+	}
 
 	return s.setMap(ctx, request.Url)
 }
@@ -170,4 +181,31 @@ func (s *RedirectionService) incrementRedirectionCount(ctx *gin.Context, uid str
 		log.Printf("failed to incremeent redirection count for %s\n", uid)
 		log.Println(err)
 	}
+}
+
+// TODO: move all external api calls to utility service
+func (s *RedirectionService) validateRecaptcha(secretKey string, token string) (isHuman bool) {
+
+	externalServiceUrl := "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + token
+
+	httpRequest, err := http.NewRequest("POST", externalServiceUrl, bytes.NewBuffer([]byte{}))
+	httpRequest.Header.Add("Content-Type", "application/json")
+
+	httpResponse, err := s.httpClient.Do(httpRequest)
+	if err != nil {
+		log.Println("failed to verify recaptcha")
+		log.Println(err)
+		return false
+	}
+	defer httpResponse.Body.Close()
+
+	var recaptchaResponse structs.RecaptchaResponse
+	err = json.NewDecoder(httpResponse.Body).Decode(&recaptchaResponse)
+	if err != nil {
+		log.Println("failed to decode resp.Body from google.com recaptcha")
+		log.Println(err)
+		return false
+	}
+
+	return recaptchaResponse.Score >= 0.3
 }

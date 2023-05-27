@@ -79,7 +79,7 @@ func (s *LinkPreviewService) getLinkPreviewFromLinkPreviewDotNet(url string) (re
 
 	resp, err := http.Get(externalServiceUrl)
 	if err != nil {
-		log.Printf("failed to retrieve preview from linkpreview.net %s \n", err)
+		log.Println("failed to retrieve preview from linkpreview.net")
 		log.Println(err)
 		return response, &util.LinkPreviewNotFoundError{}
 	}
@@ -87,7 +87,7 @@ func (s *LinkPreviewService) getLinkPreviewFromLinkPreviewDotNet(url string) (re
 
 	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
-		log.Printf("failed to decode resp.Body from linkpreview.net %s \n", err)
+		log.Println("failed to decode resp.Body from linkpreview.net")
 		log.Println(err)
 		return response, &util.LinkPreviewNotFoundError{}
 	}

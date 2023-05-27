@@ -1,5 +1,7 @@
 package structs
 
+import "time"
+
 type GetMapRequest struct {
 	Uid string `form:"uid" json:"uid" binding:"required"`
 }
@@ -21,4 +23,12 @@ type SetMapRequestV2 struct {
 
 type SetMapResponse struct {
 	ShortUrl string `json:"short_url"`
+}
+
+type RecaptchaResponse struct {
+	Success     bool      `json:"success"`
+	ChallengeTs time.Time `json:"challenge_ts"`
+	Hostname    string    `json:"hostname"`
+	Score       float64   `json:"score"`
+	Action      string    `json:"action"`
 }

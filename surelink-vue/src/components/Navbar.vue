@@ -22,7 +22,7 @@ export default {
 nav.navbar {
     min-height: unset;
     height: 0;
-    font-family: 'Roboto';
+    font-family: 'Roboto',sans-serif;
     padding: 0;
 }
 
