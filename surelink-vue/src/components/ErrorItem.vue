@@ -22,7 +22,7 @@ export default {
     padding:40px 0; background:#fff;
 }
 .class-404-image{
-    background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+    background-image: url('../../src/assets/images/404.gif');
     height: 400px;
     background-position: center;
 }
