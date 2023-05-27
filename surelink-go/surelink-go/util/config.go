@@ -10,7 +10,9 @@ type GlobalConfig struct {
 }
 
 type SecretConfig struct {
-	LinkPreviewApiKey string `mapstructure:"LINKPREVIEW_APIKEY"`
+	LinkPreviewApiKey  string `mapstructure:"LINKPREVIEW_APIKEY"`
+	RecaptchaSiteKey   string `mapstructure:"RECAPTCHA_SITEKEY"`
+	RecaptchaSecretKey string `mapstructure:"RECAPTCHA_SECRETKEY"`
 }
 
 func LoadGlobalConfig(path string) (config GlobalConfig, err error) {
