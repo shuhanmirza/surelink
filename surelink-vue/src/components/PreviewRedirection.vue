@@ -1,5 +1,5 @@
 <template>
-    <section class="section">
+    <section class="section m-5">
         <div class="container">
             <div class="columns is-centered">
                 <div class="column custom-card">
@@ -38,6 +38,10 @@
                         </div>
                         <footer class="card-footer has-background-white-bis">
                             <span @click="redirectToLink()"
+                                  :class="{
+                                           'has-background-success' : !this.isLoading && !this.loadingFail ,
+                                           'has-background-danger' : !this.isLoading && this.loadingFail
+                                  }"
                                   class="card-footer-item p-5 has-text-weight-bold is-uppercase is-text-wide-1">
                                 {{ proceedText }}
                             </span>
@@ -59,7 +63,7 @@ import "vue-toastification/dist/index.css";
 
 Vue.use(Toast);
 export default {
-    name: "PreveiwRedirection",
+    name: "PreviewRedirection",
     components: {Loader},
     data() {
         return {
@@ -78,11 +82,14 @@ export default {
         this.fetchOriginalLink();
         setTimeout(() => {
             if (this.title !== '') {
-                this.isLoading = false;
                 this.proceedText = 'Proceed to Link';
+                this.loadingFail = false;
+                this.isLoading = false;
+
             } else {
                 this.message = 'Could not load preview';
                 this.loadingFail = true;
+                this.isLoading = false;
             }
         }, 2000)
     },
@@ -98,6 +105,9 @@ export default {
                 },
             })
                 .then(response => {
+                    this.loadingFail = false;
+                    this.isLoading = false;
+                    this.proceedText = 'Proceed to Link';
                     this.redirectLink = response.data['url'];
                     this.generatePreview(link);
                 })
@@ -121,6 +131,7 @@ export default {
                     this.image = response.data['image'];
                 })
                 .catch(error => {
+                    this.title = url
                     console.log("Could not load preview");
                 })
 
@@ -179,4 +190,5 @@ body {
 .card-content {
     padding: -1rem;
 }
+
 </style>
