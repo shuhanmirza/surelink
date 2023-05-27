@@ -40,13 +40,22 @@ func (s *RedirectionService) GetMap(ctx *gin.Context, request structs.GetMapRequ
 	return response, err
 }
 
-func (s *RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapRequest) (response structs.SetMapResponse, err error) {
+func (s *RedirectionService) SetMapV1(ctx *gin.Context, request structs.SetMapRequest) (response structs.SetMapResponse, err error) {
 	if !s.validateCaptchaFromRedis(ctx, request.CaptchaUuid, request.CaptchaValue) {
 		log.Println("captcha validation failed")
 		return response, &util.CaptchaValidationFailed{}
 	}
 
-	urlValidity, err := s.utilityService.IsValidHttpsUrl(ctx, request.Url)
+	return s.setMap(ctx, request.Url)
+}
+
+func (s *RedirectionService) SetMapV2(ctx *gin.Context, request structs.SetMapRequestV2) (response structs.SetMapResponse, err error) {
+
+	return s.setMap(ctx, request.Url)
+}
+
+func (s *RedirectionService) setMap(ctx *gin.Context, url string) (response structs.SetMapResponse, err error) {
+	urlValidity, err := s.utilityService.IsValidHttpsUrl(ctx, url)
 	if err != nil {
 		log.Println("error while checking url validity")
 		return response, err
@@ -61,7 +70,7 @@ func (s *RedirectionService) SetMap(ctx *gin.Context, request structs.SetMapRequ
 		return response, err
 	}
 
-	urlMap, err := s.store.Queries.CreateUrlMap(ctx, sqlc.CreateUrlMapParams{Url: request.Url, Uid: shortUrlUid})
+	urlMap, err := s.store.Queries.CreateUrlMap(ctx, sqlc.CreateUrlMapParams{Url: url, Uid: shortUrlUid})
 	if err != nil {
 		log.Println(err)
 		if pqErr, ok := err.(*pq.Error); ok {

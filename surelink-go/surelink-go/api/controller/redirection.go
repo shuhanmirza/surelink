@@ -45,7 +45,25 @@ func (c *RedirectionController) SetMap(ctx *gin.Context) {
 		return
 	}
 
-	response, err := c.redirectionService.SetMap(ctx, request)
+	response, err := c.redirectionService.SetMapV1(ctx, request)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, response)
+}
+
+func (c *RedirectionController) SetMapV2(ctx *gin.Context) {
+	var request structs.SetMapRequestV2
+
+	err := ctx.ShouldBindJSON(&request)
+	if err != nil {
+		util.HandleCommonValidationError(ctx, err)
+		return
+	}
+
+	response, err := c.redirectionService.SetMapV2(ctx, request)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
 		return

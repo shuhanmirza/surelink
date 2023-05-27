@@ -14,6 +14,11 @@ type SetMapRequest struct {
 	Url          string `json:"url" binding:"required"`
 }
 
+type SetMapRequestV2 struct {
+	RecaptchaToken string `json:"recaptcha_token" binding:"required"`
+	Url            string `json:"url" binding:"required"`
+}
+
 type SetMapResponse struct {
 	ShortUrl string `json:"short_url"`
 }
