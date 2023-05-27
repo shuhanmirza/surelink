@@ -1,45 +1,52 @@
 <template>
-    <div class="container">
-        <div class="columns">
-            <div class="column is-offset-half">
-                <div class="columns is-flex-mobile">
-                    <div class="column is-left is-1 is-2-mobile">
-                        <a href="/"><img class="back" src="../assets/icons/left-arrow.svg" alt="reload"/></a>
-                    </div>
-                    <div class="column is-11">
-                        <h3 class="subtitle">You are being redirected to: </h3>
-                    </div>
-                </div>
-                <div class="card">
-                    <div v-if="!isLoading">
-                        <div class="card-image">
-                            <img v-if="image" :src="image" class="is-64x64" alt="">
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div v-if="!isLoading">
-                            <div v-if="title" class="is-align-items-flex-start is-justify-content-start">
-                                <h3 class="title is-5 align-title">{{ title }}</h3>
-                            </div>
-                            <div v-if="description" class="content has-text-justified">
-                                {{ description }}
-                                <br>
-                            </div>
-                        </div>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column custom-card">
+                    <div class="card shadow-lg is-cursor-pointer has-text-centered">
                         <div v-if="isLoading && !loadingFail">
+                            <br/>
                             <Loader/>
-                            <h3 class="margin">Loading Preview</h3>
+                            <br/>
                         </div>
-                        <div v-if="loadingFail">
-                            <img class="sad" src="../assets/images/sad.svg" alt="reload"/>
-                            <h3 class="margin">{{ message }}</h3>
+                        <div v-else-if="loadingFail">
+                            <figure class="">
+                                <img src="../assets/images/sad.svg" class="is-64x64" alt="reload">
+                            </figure>
+                            <div class="content has-text-weight-bold">
+                                <h3></h3>
+                                {{ message }}
+                            </div>
+                            <br/>
                         </div>
+                        <div v-else>
+                            <div>
+                                <figure class="card-image">
+                                    <img :src="image" class="is-64x64" alt="Placeholder image">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="content has-text-weight-bold is-marginless">
+                                    <h3></h3>
+                                    {{ title }}
+                                </div>
+                                <div class="content has-text-grey-light">
+                                    <h3></h3>
+                                    {{ description }}
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="card-footer has-background-white-bis">
+                            <span @click="redirectToLink()"
+                                  class="card-footer-item p-5 has-text-weight-bold is-uppercase is-text-wide-1">
+                                {{ proceedText }}
+                            </span>
+                        </footer>
                     </div>
                 </div>
-                <button class="button is-6 is-primary" @click="redirectToLink()">Proceed to link</button>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -63,7 +70,8 @@ export default {
             url: '',
             isLoading: true,
             message: '',
-            loadingFail: false
+            loadingFail: false,
+            proceedText: 'Generating Link!'
         }
     },
     mounted() {
@@ -71,6 +79,7 @@ export default {
         setTimeout(() => {
             if (this.title !== '') {
                 this.isLoading = false;
+                this.proceedText = 'Proceed to Link';
             } else {
                 this.message = 'Could not load preview';
                 this.loadingFail = true;
@@ -93,7 +102,8 @@ export default {
                     this.generatePreview(link);
                 })
                 .catch(error => {
-                    this.toastFailure("Incorrect Short Link!")
+                    this.toastFailure("Incorrect Short Link!");
+                    this.proceedText = 'Incorrect Link';
                 });
         },
         generatePreview(url) {
@@ -129,30 +139,44 @@ export default {
 </script>
 
 <style scoped>
-.container {
-    margin: 1rem;
+
+body {
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-.back {
-    width: 20px;
-    height: 20px;
+.cover-image img {
+    transition: transform 1s, filter 2s ease-in-out;
+    -webkit-transition: transform 1s, filter 2s ease-in-out;
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
 }
 
-.card {
-    padding: 2rem;
-    margin: 1rem;
+.card:hover .cover-image img {
+    cursor: pointer;
+    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
 }
 
-.margin {
-    margin: 1rem;
+.is-cursor-pointer {
+    cursor: pointer !important;
 }
 
-.sad {
-    width: 250px;
-    height: 250px;
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-.align-title {
-    text-align: left;
+.custom-card {
+    flex: none;
+    width: 40%;
+}
+
+.is-64x64 {
+    margin-top: 1.5rem;
+}
+
+.card-content {
+    padding: -1rem;
 }
 </style>
