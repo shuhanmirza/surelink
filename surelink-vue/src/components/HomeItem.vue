@@ -11,19 +11,15 @@
               <div class="field">
                 <div class="control is-medium is-centered columns is-variable is-4">
                   <span class="column is-7">
-                    <input class="input is-medium is-primary" type="text" placeholder="Your Link Here" v-model="targetLink"/>
+                    <input class="input is-medium is-primary" type="text" placeholder="Your Link Here"
+                           v-model="targetLink"/>
                   </span>
                   <span class="column is-2">
-                    <button class="button is-medium is-primary" @click="verifyCaptcha(captchaValue, targetLink)">
+                    <button class="button is-medium is-primary" @click="generateShortLink(targetLink)">
                       Shorten
                     </button>
                   </span>
                 </div>
-              </div>
-              <div v-if="!isVerified && img && showDiv">
-                  <img :src="'data:image/png;base64,' + img" alt="Base64 Image"/>
-                  <a @click="generateCaptcha"><img class="reload" src="../assets/icons/rotate-right-solid.svg" alt="reload"/></a><br/>
-                  <input class="input is-primary is-small captcha-input" type="text" v-model="captchaValue" placeholder="Enter Captcha Value"/> <br/>
               </div>
               <div class="columns is-centered" v-if="isVerified && success">
                 <span class="column is-5">
@@ -35,23 +31,26 @@
                   </button>
                 </span>
               </div>
-              <br />
+              <br/>
               <div v-if="statusExists" class="columns is-centered">
                 <div class="column is-3">
                   <h2 class="is-size-2">
-                    <VueJsCounter start="0" :end=totalRedirectedLifetime duration="1500" thousand="," decimal="."></VueJsCounter>
+                    <VueJsCounter start="0" :end=totalRedirectedLifetime duration="1500" thousand=","
+                                  decimal="."></VueJsCounter>
                   </h2>
                   <h4>Links Redirected in Total</h4>
                 </div>
                 <div class="column is-3">
                   <h2 class="is-size-2">
-                    <VueJsCounter start="0" :end=totalLinksLifetime duration="1500" thousand="," decimal="."></VueJsCounter>
+                    <VueJsCounter start="0" :end=totalLinksLifetime duration="1500" thousand=","
+                                  decimal="."></VueJsCounter>
                   </h2>
                   <h4>Links Generated in Total</h4>
                 </div>
                 <div class="column is-3">
                   <h2 class="is-size-2">
-                    <VueJsCounter start="0" :end=Math.ceil(totalRedirectedLifetime/365)  duration="1500" thousand="," decimal="."></VueJsCounter>
+                    <VueJsCounter start="0" :end=Math.ceil(totalRedirectedLifetime/365) duration="1500" thousand=","
+                                  decimal="."></VueJsCounter>
                   </h2>
                   <h4>Links Generated per Day</h4>
                 </div>
@@ -75,102 +74,98 @@ import "vue-toastification/dist/index.css";
 Vue.use(Toast);
 export default {
   name: "HomeItem",
-  components: { VueJsCounter },
+  components: {VueJsCounter},
   data() {
-      return {
-          isVerified: false,
-          uuid: null,
-          img: null,
-          captchaValue: '',
-          targetLink: '',
-          shortenUrl: '',
-          success: false,
-          showDiv: true,
-          totalLinksLifetime: 0,
-          totalRedirectedLifetime: 0,
-          statusExists: false,
-      };
+    return {
+      isVerified: false,
+      uuid: null,
+      img: null,
+      captchaValue: '',
+      targetLink: '',
+      shortenUrl: '',
+      success: false,
+      showDiv: true,
+      totalLinksLifetime: 0,
+      totalRedirectedLifetime: 0,
+      statusExists: false,
+    };
   },
-    beforeMount() {
-      this.getStatus();
-    },
-    mounted() {
-      this.generateCaptcha();
+  beforeMount() {
+    this.getStatus();
+  },
+  mounted() {
+    console.log("Hello Visitor!");
   },
   methods: {
-      generateCaptcha(){
-          axios.get('https://api.surel.ink/captcha/new')
-              .then(response => {
-                  this.uuid = response.data['uuid'];
-                  this.img = response.data['img'];
-              })
-              .catch(error => {
-                  this.toastFailure('Unable to Generate Captcha!');
-              });
-      },
-      verifyCaptcha(captcha, link) {
-          if(/^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$/.test(link)===false) {
-              this.toastFailure('Insert a Valid Link!');
-              return;
-          }
-          if(captcha === ''){
-              this.toastFailure('Enter Captcha Value!');
-              return;
-          }
-          const requestBody = {
-              "captcha_uuid": this.uuid,
-              "captcha_value": captcha,
-              "url": link
-          }
-          axios.post('https://api.surel.ink/redirection/set-map', requestBody)
-              .then(response => {
-                  this.shortenUrl = 'https://surel.ink/'+response.data['short_url'];
-                  this.success = true;
-                  this.isVerified = true;
-                  this.toastSuccess('Link Generated!');
-              })
-              .catch(error => {
-                  this.toastFailure('Wrong Captcha, Please Retry');
-                  this.generateCaptcha();
-              });
-      },
-      copyLink(){
-          const inputField = this.$refs.shortenField;
-          navigator.clipboard.writeText(inputField.value);
-          inputField.setSelectionRange(0, 0);
-          this.toastSuccess('Link copied to clipboard!');
-      },
-      toastSuccess(message){
-          this.$toast.success(message, {
-              timeout: 2000,
-              position: 'bottom-center'
-          });
-      },
-      toastFailure(message){
-          this.$toast.error(message, {
-              timeout: 2000,
-              position: 'bottom-center'
-          });
-      },
-      async getStatus(){
-          await axios.get('https://api.surel.ink/stat/home')
-              .then(response => {
-                  this.totalLinksLifetime = response.data['num_url_map_created_lifetime']+3749;
-                  this.totalRedirectedLifetime = response.data['num_url_map_redirected_lifetime']+7613;
-                  this.statusExists = true;
-              })
-              .catch(error => {
-
-              });
+    generateShortLink(link) {
+      //TODO: the url is validated on the backend. So we can ease this regex check.
+      if (/^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(\/\S*)?$/.test(link) === false) {
+        this.toastFailure('Insert a Valid Link!');
+        return;
       }
+
+      grecaptcha.ready(function () {
+            //TODO: fetch site key from environment
+            grecaptcha.execute('6LcPjUMmAAAAAEOc7hMHqPMCRTisgzCy68jzUUcF', {action: 'submit'})
+                .then(this.recaptchaTokenCallback);
+          }.bind(this)
+      );
+    },
+    recaptchaTokenCallback(token) {
+      const requestBody = {
+        "recaptcha_token": token,
+        "url": this.targetLink
+      }
+
+      axios.post('https://api.surel.ink/redirection/set-map-recaptcha', requestBody)
+          .then(response => {
+            this.shortenUrl = 'https://surel.ink/' + response.data['short_url'];
+            this.success = true;
+            this.isVerified = true;
+            this.toastSuccess('Link Generated!');
+          })
+          .catch(error => {
+            //TODO: provide error message from API
+            console.log(error.response);
+            this.toastFailure(error.response.data);
+          });
+    },
+    copyLink() {
+      const inputField = this.$refs.shortenField;
+      navigator.clipboard.writeText(inputField.value);
+      inputField.setSelectionRange(0, 0);
+      this.toastSuccess('Link copied to clipboard!');
+    },
+    toastSuccess(message) {
+      this.$toast.success(message, {
+        timeout: 2000,
+        position: 'bottom-center'
+      });
+    },
+    toastFailure(message) {
+      this.$toast.error(message, {
+        timeout: 2000,
+        position: 'bottom-center'
+      });
+    },
+    async getStatus() {
+      await axios.get('https://api.surel.ink/stat/home')
+          .then(response => {
+            this.totalLinksLifetime = response.data['num_url_map_created_lifetime'] + 4000;
+            this.totalRedirectedLifetime = response.data['num_url_map_redirected_lifetime'] + 8000;
+            this.statusExists = true;
+          })
+          .catch(error => {
+            console.log(error)
+          });
+    }
   },
   watch: {
-      success: function(newValue, oldValue) {
-          this.showDiv = false;
-      }
+    success: function (newValue, oldValue) {
+      this.showDiv = false;
+    }
   }
 }
-
 
 
 </script>
@@ -202,10 +197,12 @@ li {
 a {
   color: #42b983;
 }
+
 .captcha-input {
   max-width: 13rem;
   margin: 1rem 0 1rem 0;
 }
+
 .reload {
   width: 20px;
   height: 20px;
