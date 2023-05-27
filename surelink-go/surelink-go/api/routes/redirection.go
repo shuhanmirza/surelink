@@ -22,5 +22,6 @@ func (r *RedirectionRoute) Setup() {
 	{
 		configuration.GET("/get-map", r.Controller.GetMap)
 		configuration.POST("/set-map", r.Controller.SetMap)
+		configuration.POST("/set-map/v2", r.Controller.SetMap)
 	}
 }

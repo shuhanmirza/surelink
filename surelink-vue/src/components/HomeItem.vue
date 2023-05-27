@@ -117,7 +117,7 @@ export default {
         "url": this.targetLink
       }
 
-      axios.post('https://api.surel.ink/redirection/set-map-recaptcha', requestBody)
+      axios.post('https://api.surel.ink/redirection/set-map/v2', requestBody)
           .then(response => {
             this.shortenUrl = 'https://surel.ink/' + response.data['short_url'];
             this.success = true;
