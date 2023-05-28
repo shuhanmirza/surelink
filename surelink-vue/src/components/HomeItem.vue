@@ -1,13 +1,16 @@
 <template>
   <div class="is-family-primary columns is-centered">
     <div class="column is-centered is-9">
-      <h2 class="title is-size-1 ">SHORTEN YOUR URLS</h2>
-      <h3 class="is-size-5">Streamline your links with ease!</h3>
+      <h2 class="title is-size-1 ">
+        <a href="/" style="color:black">
+          <img src="../../src/assets/images/logo.svg" width="40" height="40"> SureLink
+        </a>
+      </h2>
       <div class="columns is-centered">
         <div class="card column is-9">
           <div class="card-content">
             <div class="content">
-              <h4 class="subtitle is-size-4">Shorten URL Is Just Simple</h4>
+              <h4 class="subtitle is-size-5">Shortening your URL is that simple!</h4>
               <div class="field">
                 <div class="control is-medium is-centered columns is-variable is-4">
                   <span class="column is-7">
