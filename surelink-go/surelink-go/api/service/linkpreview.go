@@ -44,6 +44,18 @@ func (s *LinkPreviewService) GetLinkPreview(ctx *gin.Context, request structs.Ge
 
 }
 
+func (s *LinkPreviewService) SetLinkPreviewOnLinkCreation(ctx *gin.Context, url string) {
+	response, err := s.getLinkPreviewFromCache(ctx, url)
+	if err == nil {
+		return
+	}
+
+	response, err = s.getLinkPreviewFromLinkPreviewDotNet(url)
+	if err == nil {
+		s.setLinkPreviewInCache(ctx, url, response)
+	}
+}
+
 func (s *LinkPreviewService) setLinkPreviewInCache(ctx *gin.Context, url string, response structs.GetLinkPreviewResponse) {
 	key := util.RedisLinkPreviewPrefix + url
 	valueBytes, _ := json.Marshal(response)

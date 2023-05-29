@@ -92,6 +92,7 @@ func (s *RedirectionService) setMap(ctx *gin.Context, url string) (response stru
 	}
 
 	go s.setUrlMapInRedis(ctx, urlMap)
+	go s.serviceDiscovery.LinkPreviewService().SetLinkPreviewOnLinkCreation(ctx, url)
 
 	response = structs.SetMapResponse{ShortUrl: shortUrlUid}
 	return response, nil
