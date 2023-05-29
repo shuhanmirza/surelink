@@ -11,22 +11,22 @@ import (
 )
 
 type LinkPreviewService struct {
-	cache              *infrastructure.Cache
-	redirectionService RedirectionService
-	secretConfig       util.SecretConfig
+	cache            *infrastructure.Cache
+	secretConfig     util.SecretConfig
+	serviceDiscovery *ServiceSilo
 }
 
-func NewLinkPreviewService(cache *infrastructure.Cache, redirectionService RedirectionService, secretConfig util.SecretConfig) LinkPreviewService {
+func NewLinkPreviewService(cache *infrastructure.Cache, secretConfig util.SecretConfig, serviceDiscovery *ServiceSilo) LinkPreviewService {
 	return LinkPreviewService{
-		cache:              cache,
-		redirectionService: redirectionService,
-		secretConfig:       secretConfig,
+		cache:            cache,
+		secretConfig:     secretConfig,
+		serviceDiscovery: serviceDiscovery,
 	}
 }
 
 func (s *LinkPreviewService) GetLinkPreview(ctx *gin.Context, request structs.GetLinkPreviewRequest) (response structs.GetLinkPreviewResponse, err error) {
 
-	urlMapResponse, err := s.redirectionService.GetMap(ctx, structs.GetMapRequest{Uid: request.Uid})
+	urlMapResponse, err := s.serviceDiscovery.RedirectionService().GetMap(ctx, structs.GetMapRequest{Uid: request.Uid})
 	if err != nil {
 		return response, err
 	}

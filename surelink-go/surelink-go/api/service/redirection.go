@@ -15,20 +15,20 @@ import (
 )
 
 type RedirectionService struct {
-	store          *infrastructure.Store
-	cache          *infrastructure.Cache
-	utilityService *UtilityService
-	secretConfig   util.SecretConfig
-	httpClient     http.Client
+	store            *infrastructure.Store
+	cache            *infrastructure.Cache
+	serviceDiscovery *ServiceSilo
+	secretConfig     util.SecretConfig
+	httpClient       http.Client
 }
 
-func NewRedirectionService(store *infrastructure.Store, cache *infrastructure.Cache, utilityService *UtilityService, secretConfig util.SecretConfig) RedirectionService {
+func NewRedirectionService(store *infrastructure.Store, cache *infrastructure.Cache, secretConfig util.SecretConfig, serviceDiscovery *ServiceSilo) RedirectionService {
 	return RedirectionService{
-		store:          store,
-		cache:          cache,
-		utilityService: utilityService,
-		secretConfig:   secretConfig,
-		httpClient:     http.Client{},
+		store:            store,
+		cache:            cache,
+		secretConfig:     secretConfig,
+		serviceDiscovery: serviceDiscovery,
+		httpClient:       http.Client{},
 	}
 }
 
@@ -66,7 +66,7 @@ func (s *RedirectionService) SetMapV2(ctx *gin.Context, request structs.SetMapRe
 }
 
 func (s *RedirectionService) setMap(ctx *gin.Context, url string) (response structs.SetMapResponse, err error) {
-	urlValidity, err := s.utilityService.IsValidHttpsUrl(ctx, url)
+	urlValidity, err := s.serviceDiscovery.UtilityService().IsValidHttpsUrl(ctx, url)
 	if err != nil {
 		log.Println("error while checking url validity")
 		return response, err
@@ -98,7 +98,7 @@ func (s *RedirectionService) setMap(ctx *gin.Context, url string) (response stru
 }
 
 func (s *RedirectionService) generateShortUrlUid(ctx *gin.Context) (uidString string, err error) {
-	uidString = s.utilityService.RandomStringAlphabet(util.ShortUrlUidLength)
+	uidString = s.serviceDiscovery.UtilityService().RandomStringAlphabet(util.ShortUrlUidLength)
 
 	count, err := s.store.Queries.CheckIfUidExistsInUrlMap(ctx, uidString)
 	if err != nil {

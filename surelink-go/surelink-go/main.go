@@ -50,8 +50,12 @@ func main() {
 	log.Println("Initializing Routes")
 	ginRouter := infrastructure.NewGinRouter()
 
+	//utility
+	serviceDiscovery := service.NewServiceDiscovery()
+
 	//initialize service
 	utilityService := service.NewUtilityService(cache, random)
+	serviceDiscovery.SetUtilityService(&utilityService)
 
 	// captcha
 	captchaService := service.NewCaptchaService(cache)
@@ -60,7 +64,8 @@ func main() {
 	captchaRoute.Setup()
 
 	//redirection
-	redirectionService := service.NewRedirectionService(store, cache, &utilityService, secretConfig)
+	redirectionService := service.NewRedirectionService(store, cache, secretConfig, &serviceDiscovery)
+	serviceDiscovery.SetRedirectionService(&redirectionService)
 	redirectionController := controller.NewRedirectionController(redirectionService)
 	redirectionRoute := routes.NewRedirectionRoute(redirectionController, ginRouter)
 	redirectionRoute.Setup()
@@ -72,7 +77,8 @@ func main() {
 	statRoute.Setup()
 
 	// link-preview
-	linkPreviewService := service.NewLinkPreviewService(cache, redirectionService, secretConfig)
+	linkPreviewService := service.NewLinkPreviewService(cache, secretConfig, &serviceDiscovery)
+	serviceDiscovery.SetLinkPreviewService(&linkPreviewService)
 	linkPreviewController := controller.NewLinkPreviewController(linkPreviewService)
 	linkPreviewRoute := routes.NewLinkPreviewRoute(linkPreviewController, ginRouter)
 	linkPreviewRoute.Setup()
