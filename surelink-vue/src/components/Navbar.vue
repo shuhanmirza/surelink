@@ -6,6 +6,15 @@
             </a>
         </div>
     </nav>
+=======
+<!--    <nav class="navbar is-transparent mb-5" role="navigation" aria-label="main navigation">-->
+<!--        <div class="navbar-brand">-->
+<!--&lt;!&ndash;            <a href="/">&ndash;&gt;-->
+<!--&lt;!&ndash;                <img src="../../src/assets/images/logo.svg" width="32" height="32"> SureLink&ndash;&gt;-->
+<!--&lt;!&ndash;            </a>&ndash;&gt;-->
+<!--        </div>-->
+<!--    </nav>-->
+>>>>>>> Stashed changes
 </template>
 <script>
 export default {
